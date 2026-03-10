@@ -6,668 +6,464 @@
 <title>Reynoldsovo číslo | ChemEng Kalkulačka</title>
 <style>
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-light: #eff6ff;
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --bg: #f1f5f9;
-  --surface: #ffffff;
-  --surface2: #f8fafc;
-  --border: #e2e8f0;
-  --text: #0f172a;
-  --text-secondary: #64748b;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-  --radius: 14px;
-  --radius-sm: 9px;
-  --transition: all 0.25s ease;
+  --primary:#2563eb; --primary-dark:#1d4ed8; --primary-light:#eff6ff;
+  --success:#10b981; --warning:#f59e0b; --danger:#ef4444;
+  --bg:#f1f5f9; --surface:#fff; --surface2:#f8fafc; --border:#e2e8f0;
+  --text:#0f172a; --text2:#64748b;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.12);
+  --r:14px; --r-sm:9px; --tr:all .25s ease;
 }
-[data-theme="dark"] {
-  --bg: #0b1120;
-  --surface: #1a2235;
-  --surface2: #243044;
-  --border: #334155;
-  --text: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --primary-light: #1e3a5f;
-  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.25);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+[data-theme=dark]{
+  --bg:#0b1120; --surface:#1a2235; --surface2:#243044; --border:#334155;
+  --text:#e2e8f0; --text2:#94a3b8; --primary-light:#1e3a5f;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 12px rgba(0,0,0,.25);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.4);
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  transition: background 0.3s ease, color 0.3s ease;
-  line-height: 1.6;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;line-height:1.6;}
 
 /* ── HEADER ── */
-.header {
-  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
-  color: white;
-  padding: 0 1.5rem;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  box-shadow: 0 2px 12px rgba(37,99,235,0.35);
-}
-.header-left { display: flex; align-items: center; gap: 0.75rem; }
-.header h1 { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.01em; }
-.header-subtitle { font-size: 0.75rem; opacity: 0.75; display: none; }
-@media (min-width: 600px) { .header-subtitle { display: block; } }
-.header-actions { display: flex; gap: 0.5rem; }
-.btn-icon {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: white;
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-  transition: var(--transition);
-  text-decoration: none;
-}
-.btn-icon:hover { background: rgba(255,255,255,0.28); }
+.hdr{background:linear-gradient(135deg,#1d4ed8,#2563eb 60%,#3b82f6);color:#fff;padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(37,99,235,.35);}
+.hdr-l{display:flex;align-items:center;gap:.75rem;}
+.hdr h1{font-size:1.125rem;font-weight:700;}
+.hdr-sub{font-size:.75rem;opacity:.75;display:none;}
+@media(min-width:600px){.hdr-sub{display:block;}}
+.hdr-acts{display:flex;gap:.5rem;}
+.btn-i{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:var(--tr);}
+.btn-i:hover{background:rgba(255,255,255,.28);}
 
 /* ── LAYOUT ── */
-.container { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-@media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+.ctn{max-width:1300px;margin:0 auto;padding:1.5rem;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;}
+@media(max-width:900px){.mgrid{grid-template-columns:1fr;}}
 
 /* ── CARD ── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.375rem;
-  box-shadow: var(--shadow);
-  transition: background 0.3s, border-color 0.3s;
-}
-.card + .card { margin-top: 1.25rem; }
-.card-title {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 1.125rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.card-title-sm { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.625rem; }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.375rem;box-shadow:var(--shadow);transition:background .3s,border-color .3s;}
+.card+.card{margin-top:1.25rem;}
+.ctitle{font-size:.9375rem;font-weight:700;margin-bottom:1.125rem;display:flex;align-items:center;gap:.5rem;}
+.csub{font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);font-weight:600;margin-bottom:.625rem;}
 
 /* ── TARGET SELECTOR ── */
-.target-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-@media (max-width: 480px) { .target-grid { grid-template-columns: repeat(2, 1fr); } }
-.target-btn {
-  padding: 0.5rem 0.375rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface2);
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  text-align: center;
-}
-.target-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-.target-btn.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.25rem;}
+@media(max-width:480px){.tgrid{grid-template-columns:repeat(2,1fr);}}
+.tbtn{padding:.5rem .375rem;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface2);color:var(--text2);font-size:.8125rem;font-weight:600;cursor:pointer;transition:var(--tr);text-align:center;}
+.tbtn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.tbtn.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3);}
 
 /* ── FORM ── */
-.form-group { margin-bottom: 0.875rem; }
-label { display: block; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; }
-.input-row { display: flex; gap: 0.5rem; }
-input[type="number"] {
-  flex: 1; min-width: 0;
-  padding: 0.625rem 0.875rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9375rem;
-  background: var(--surface);
-  color: var(--text);
-  transition: var(--transition);
-  outline: none;
-  -moz-appearance: textfield;
-}
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
-input[type="number"]:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
-input[type="number"].error { border-color: var(--danger); }
-input[type="number"]::placeholder { color: var(--text-secondary); opacity: 0.55; }
+.fg{margin-bottom:.875rem;}
+label{display:block;font-size:.8125rem;font-weight:600;color:var(--text2);margin-bottom:.3rem;}
+.irow{display:flex;gap:.5rem;}
 
-select {
-  padding: 0.625rem 0.625rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  background: var(--surface2);
-  color: var(--text);
-  cursor: pointer;
-  transition: var(--transition);
-  outline: none;
-  white-space: nowrap;
-}
-select:focus { border-color: var(--primary); }
-.unit-label {
-  display: flex; align-items: center;
-  padding: 0 0.625rem;
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  white-space: nowrap;
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-}
-.hint-box {
-  padding: 0.5rem 0.75rem;
-  background: var(--primary-light);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  color: var(--primary);
-  margin-bottom: 0.875rem;
-  border-left: 3px solid var(--primary);
-}
-[data-theme="dark"] .hint-box { color: #93c5fd; }
+input[type=number]{flex:1;min-width:0;padding:.625rem .875rem;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.9375rem;background:var(--surface);color:var(--text);transition:var(--tr);outline:none;-moz-appearance:textfield;}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
+input[type=number]:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+input[type=number].err{border-color:var(--danger);}
+input[type=number]::placeholder{color:var(--text2);opacity:.55;}
+
+select{padding:.625rem .625rem;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.8125rem;background:var(--surface2);color:var(--text);cursor:pointer;transition:var(--tr);outline:none;}
+select:focus{border-color:var(--primary);}
+.ulabel{display:flex;align-items:center;padding:0 .625rem;color:var(--text2);font-size:.8125rem;white-space:nowrap;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);}
+
+/* ── SCI-NOTATION INPUT ── */
+.sci-row{display:flex;gap:.375rem;align-items:center;}
+.sci-coef{flex:2;min-width:0;}
+.sci-times{color:var(--text2);font-size:.8125rem;white-space:nowrap;padding:0 .125rem;}
+.sci-exp{width:70px;flex-shrink:0;}
+.sci-unit{flex-shrink:0;}
+.sci-preview{font-size:.75rem;color:var(--primary);margin-top:.25rem;font-family:'Courier New',monospace;min-height:1em;}
+[data-theme=dark] .sci-preview{color:#93c5fd;}
+
+/* ── HINT ── */
+.hint{padding:.5rem .75rem;background:var(--primary-light);border-radius:var(--r-sm);font-size:.75rem;color:var(--primary);margin-bottom:.875rem;border-left:3px solid var(--primary);}
+[data-theme=dark] .hint{color:#93c5fd;}
 
 /* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 0.375rem;
-  padding: 0.625rem 1.25rem;
-  border: 1.5px solid transparent;
-  border-radius: var(--radius-sm);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-}
-.btn-primary {
-  background: var(--primary); color: white;
-  width: 100%; padding: 0.875rem; font-size: 1rem;
-  margin-top: 0.25rem;
-  box-shadow: 0 2px 8px rgba(37,99,235,0.28);
-}
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.4); }
-.btn-primary:active { transform: translateY(0); }
-.btn-secondary {
-  background: var(--surface2); color: var(--text-secondary);
-  border-color: var(--border); flex: 1; font-size: 0.875rem; padding: 0.5rem 0.75rem;
-}
-.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-.btn-fluid {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: white; width: 100%; margin-bottom: 1.125rem;
-  box-shadow: 0 2px 8px rgba(99,102,241,0.3);
-}
-.btn-fluid:hover { opacity: 0.9; transform: translateY(-1px); }
-.btn-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.375rem;padding:.625rem 1.25rem;border:1.5px solid transparent;border-radius:var(--r-sm);font-size:.9375rem;font-weight:600;cursor:pointer;transition:var(--tr);}
+.btn-p{background:var(--primary);color:#fff;width:100%;padding:.875rem;font-size:1rem;margin-top:.25rem;box-shadow:0 2px 8px rgba(37,99,235,.28);}
+.btn-p:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.4);}
+.btn-s{background:var(--surface2);color:var(--text2);border-color:var(--border);flex:1;font-size:.875rem;padding:.5rem .75rem;}
+.btn-s:hover{border-color:var(--primary);color:var(--primary);}
+.btn-fluid{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;width:100%;margin-bottom:1.125rem;box-shadow:0 2px 8px rgba(99,102,241,.3);}
+.btn-fluid:hover{opacity:.9;transform:translateY(-1px);}
+.btn-row{display:flex;gap:.5rem;margin-top:.75rem;}
+.btn-danger{background:#fee2e2;color:#991b1b;border-color:#fecaca;}
+[data-theme=dark] .btn-danger{background:#7f1d1d;color:#fca5a5;border-color:#991b1b;}
+.btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger);}
 
 /* ── RESULT ── */
-.result-card {
-  border-radius: var(--radius-sm);
-  padding: 1.25rem;
-  text-align: center;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  opacity: 0;
-  transform: scale(0.95) translateY(6px);
-}
-.result-card.show { opacity: 1; transform: scale(1) translateY(0); }
-.result-card.laminar    { background: linear-gradient(135deg,#d1fae5,#a7f3d0); border: 2px solid #10b981; }
-.result-card.transitional { background: linear-gradient(135deg,#fef3c7,#fde68a); border: 2px solid #f59e0b; }
-.result-card.turbulent  { background: linear-gradient(135deg,#fee2e2,#fecaca); border: 2px solid #ef4444; }
-[data-theme="dark"] .result-card.laminar    { background: linear-gradient(135deg,#064e3b,#065f46); }
-[data-theme="dark"] .result-card.transitional { background: linear-gradient(135deg,#78350f,#92400e); }
-[data-theme="dark"] .result-card.turbulent  { background: linear-gradient(135deg,#7f1d1d,#991b1b); }
-.result-icon { font-size: 2rem; margin-bottom: 0.375rem; }
-.result-re { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
-.result-type { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
-.result-desc { font-size: 0.8125rem; opacity: 0.8; }
-
-.no-result {
-  text-align: center; padding: 2rem 1rem;
-  color: var(--text-secondary); font-size: 0.875rem;
-}
-.no-result-icon { font-size: 3rem; display: block; margin-bottom: 0.75rem; opacity: 0.4; }
+.rcard{border-radius:var(--r-sm);padding:1.25rem;text-align:center;transition:all .4s cubic-bezier(.34,1.56,.64,1);opacity:0;transform:scale(.95) translateY(6px);}
+.rcard.show{opacity:1;transform:scale(1) translateY(0);}
+.rcard.laminar{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border:2px solid #10b981;}
+.rcard.transitional{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;}
+.rcard.turbulent{background:linear-gradient(135deg,#fee2e2,#fecaca);border:2px solid #ef4444;}
+[data-theme=dark] .rcard.laminar{background:linear-gradient(135deg,#064e3b,#065f46);}
+[data-theme=dark] .rcard.transitional{background:linear-gradient(135deg,#78350f,#92400e);}
+[data-theme=dark] .rcard.turbulent{background:linear-gradient(135deg,#7f1d1d,#991b1b);}
+.r-icon{font-size:2rem;margin-bottom:.375rem;}
+.r-re{font-size:2.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.25rem;}
+.r-type{font-size:1.125rem;font-weight:700;margin-bottom:.25rem;}
+.r-desc{font-size:.8125rem;opacity:.8;}
+.no-result{text-align:center;padding:2rem 1rem;color:var(--text2);font-size:.875rem;}
+.no-result-icon{font-size:3rem;display:block;margin-bottom:.75rem;opacity:.4;}
 
 /* ── PARAMS TABLE ── */
-.params-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.375rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.8125rem;
-}
-.params-row:last-child { border-bottom: none; }
-.params-label { color: var(--text-secondary); }
-.params-value { font-weight: 600; font-family: 'Courier New', monospace; font-size: 0.8125rem; }
+.prow{display:flex;justify-content:space-between;align-items:center;padding:.375rem 0;border-bottom:1px solid var(--border);font-size:.8125rem;}
+.prow:last-child{border-bottom:none;}
+.pk{color:var(--text2);}
+.pv{font-weight:600;font-family:'Courier New',monospace;font-size:.8125rem;}
 
-/* ── VISUALIZATION ── */
-.viz-wrap {
-  background: var(--surface2);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-  margin-top: 0.875rem;
-}
-.scale-bar {
-  position: relative;
-  height: 28px;
-  border-radius: 14px;
-  overflow: visible;
-  background: linear-gradient(to right, #10b981 0%, #10b981 37%, #f59e0b 37%, #f59e0b 48%, #ef4444 48%, #ef4444 100%);
-  margin-bottom: 1.75rem;
-  margin-top: 0.5rem;
-}
-.scale-marker {
-  position: absolute;
-  top: -9px; width: 5px; height: 46px;
-  background: var(--text);
-  border-radius: 3px;
-  transform: translateX(-50%);
-  transition: left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.scale-marker::after {
-  content: attr(data-value);
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 50%; transform: translateX(-50%);
-  font-size: 0.6875rem; font-weight: 700;
-  white-space: nowrap; color: var(--text);
-  background: var(--surface);
-  padding: 1px 5px; border-radius: 4px;
-  border: 1px solid var(--border);
-}
-.scale-zones {
-  display: flex; justify-content: space-between;
-  font-size: 0.6875rem; color: var(--text-secondary); margin-top: 0.25rem;
-}
-.streamlines-wrap {
-  margin-top: 0.75rem;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--surface);
-}
-svg.streamlines { display: block; width: 100%; height: 72px; }
+/* ── VIZ ── */
+.viz{background:var(--surface2);border-radius:var(--r-sm);padding:1rem;margin-top:.875rem;}
+.sbar{position:relative;height:28px;border-radius:14px;overflow:visible;background:linear-gradient(to right,#10b981 0%,#10b981 37%,#f59e0b 37%,#f59e0b 48%,#ef4444 48%,#ef4444 100%);margin-bottom:1.75rem;margin-top:.5rem;}
+.smark{position:absolute;top:-9px;width:5px;height:46px;background:var(--text);border-radius:3px;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.56,.64,1);}
+.smark::after{content:attr(data-value);position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:.6875rem;font-weight:700;white-space:nowrap;color:var(--text);background:var(--surface);padding:1px 5px;border-radius:4px;border:1px solid var(--border);}
+.szones{display:flex;justify-content:space-between;font-size:.6875rem;color:var(--text2);margin-top:.25rem;}
+.svgwrap{margin-top:.75rem;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);background:var(--surface);}
+svg.sl{display:block;width:100%;height:72px;}
 
 /* ── HISTORY ── */
-.history-scroll { overflow-x: auto; max-height: 260px; overflow-y: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
-th {
-  background: var(--surface2); padding: 0.5rem 0.75rem;
-  text-align: left; font-weight: 700; color: var(--text-secondary);
-  border-bottom: 2px solid var(--border);
-  position: sticky; top: 0;
-  white-space: nowrap;
-}
-td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text); }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--surface2); }
-.badge {
-  display: inline-block; padding: 0.125rem 0.5rem;
-  border-radius: 100px; font-size: 0.6875rem; font-weight: 700;
-}
-.badge-laminar      { background: #d1fae5; color: #065f46; }
-.badge-transitional { background: #fef3c7; color: #92400e; }
-.badge-turbulent    { background: #fee2e2; color: #991b1b; }
-[data-theme="dark"] .badge-laminar      { background: #064e3b; color: #6ee7b7; }
-[data-theme="dark"] .badge-transitional { background: #78350f; color: #fcd34d; }
-[data-theme="dark"] .badge-turbulent    { background: #7f1d1d; color: #fca5a5; }
+.hscroll{overflow-x:auto;max-height:260px;overflow-y:auto;}
+table{width:100%;border-collapse:collapse;font-size:.8125rem;}
+th{background:var(--surface2);padding:.5rem .75rem;text-align:left;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);position:sticky;top:0;white-space:nowrap;}
+td{padding:.45rem .75rem;border-bottom:1px solid var(--border);color:var(--text);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--surface2);}
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:100px;font-size:.6875rem;font-weight:700;}
+.bl{background:#d1fae5;color:#065f46;} .bt{background:#fef3c7;color:#92400e;} .br{background:#fee2e2;color:#991b1b;}
+[data-theme=dark] .bl{background:#064e3b;color:#6ee7b7;} [data-theme=dark] .bt{background:#78350f;color:#fcd34d;} [data-theme=dark] .br{background:#7f1d1d;color:#fca5a5;}
 
 /* ── THEORY ── */
-.collapsible-trigger {
-  display: flex; align-items: center; justify-content: space-between;
-  cursor: pointer; padding: 0.75rem 1rem;
-  background: var(--surface2); border-radius: var(--radius-sm);
-  font-weight: 700; font-size: 0.9375rem;
-  user-select: none; transition: var(--transition);
-}
-.collapsible-trigger:hover { background: var(--border); }
-.collapsible-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.collapsible-body.open { max-height: 2000px; }
-.collapsible-inner { padding: 1rem; }
-.formula {
-  background: var(--primary-light);
-  border-left: 3px solid var(--primary);
-  padding: 0.625rem 1rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  font-family: 'Courier New', monospace;
-  font-size: 0.875rem;
-  margin: 0.5rem 0;
-  color: var(--text);
-}
-[data-theme="dark"] .formula { color: #93c5fd; }
-h4.section-h { font-size: 0.875rem; font-weight: 700; margin: 1rem 0 0.5rem; color: var(--text); }
-.theory-p { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.75; }
-.theory-tbl { width: 100%; border-collapse: collapse; margin: 0.625rem 0; font-size: 0.8125rem; }
-.theory-tbl th { background: var(--primary); color: white; padding: 0.4rem 0.75rem; text-align: left; }
-.theory-tbl td { border: 1px solid var(--border); padding: 0.4rem 0.75rem; }
-.theory-tbl tr:nth-child(even) td { background: var(--surface2); }
-.theory-ul { padding-left: 1.25rem; font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.375rem; }
-.theory-ul li { margin-bottom: 0.375rem; line-height: 1.6; }
+.ctrig{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:.75rem 1rem;background:var(--surface2);border-radius:var(--r-sm);font-weight:700;font-size:.9375rem;user-select:none;transition:var(--tr);}
+.ctrig:hover{background:var(--border);}
+.cbody{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);}
+.cbody.open{max-height:2200px;}
+.cinner{padding:1rem;}
+.formula{background:var(--primary-light);border-left:3px solid var(--primary);padding:.625rem 1rem;border-radius:0 var(--r-sm) var(--r-sm) 0;font-family:'Courier New',monospace;font-size:.875rem;margin:.5rem 0;color:var(--text);}
+[data-theme=dark] .formula{color:#93c5fd;}
+h4.sh{font-size:.875rem;font-weight:700;margin:1rem 0 .5rem;color:var(--text);}
+.tp{font-size:.8125rem;color:var(--text2);line-height:1.75;}
+.ttbl{width:100%;border-collapse:collapse;margin:.625rem 0;font-size:.8125rem;}
+.ttbl th{background:var(--primary);color:#fff;padding:.4rem .75rem;text-align:left;}
+.ttbl td{border:1px solid var(--border);padding:.4rem .75rem;}
+.ttbl tr:nth-child(even) td{background:var(--surface2);}
+.tul{padding-left:1.25rem;font-size:.8125rem;color:var(--text2);margin-top:.375rem;}
+.tul li{margin-bottom:.375rem;line-height:1.6;}
 
-/* ── FRICTION CARD ── */
-.friction-box {
-  background: var(--surface2); border-radius: var(--radius-sm);
-  padding: 0.875rem 1rem; margin-top: 0.625rem;
-}
-.friction-formula { font-family: 'Courier New', monospace; font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.375rem; }
-.friction-value { font-size: 1.375rem; font-weight: 800; color: var(--primary); }
+/* ── FRICTION ── */
+.fbox{background:var(--surface2);border-radius:var(--r-sm);padding:.875rem 1rem;margin-top:.625rem;}
+.fform{font-family:'Courier New',monospace;font-size:.8125rem;color:var(--text2);margin-bottom:.375rem;}
+.fval{font-size:1.375rem;font-weight:800;color:var(--primary);}
 
 /* ── MODAL ── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.55);
-  z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-  padding: 1.5rem;
-  backdrop-filter: blur(4px);
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  max-width: 520px; width: 100%;
-  box-shadow: var(--shadow-lg);
-  transform: scale(0.93);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-height: 90vh; overflow-y: auto;
-}
-.modal-overlay.open .modal { transform: scale(1); }
-.modal-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem; }
-.fluid-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-@media (max-width: 400px) { .fluid-grid { grid-template-columns: 1fr; } }
-.fluid-card {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 0.875rem;
-  cursor: pointer; transition: var(--transition);
-}
-.fluid-card:hover { border-color: var(--primary); background: var(--primary-light); }
-.fluid-name { font-weight: 700; font-size: 0.875rem; margin-bottom: 0.25rem; }
-.fluid-props { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.6; }
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;padding:1.5rem;backdrop-filter:blur(4px);}
+.moverlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border-radius:var(--r);padding:1.5rem;max-width:560px;width:100%;box-shadow:var(--shadow-lg);transform:scale(.93);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
+.moverlay.open .modal{transform:scale(1);}
+.mtitle{font-size:1.125rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+@media(max-width:420px){.fgrid{grid-template-columns:1fr;}}
+.fcard{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.75rem .875rem;cursor:pointer;transition:var(--tr);}
+.fcard:hover{border-color:var(--primary);background:var(--primary-light);}
+.fcard.custom-btn{border-style:dashed;text-align:center;color:var(--text2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;min-height:80px;}
+.fcard.custom-btn:hover{border-color:#8b5cf6;color:#8b5cf6;background:#f5f3ff;}
+[data-theme=dark] .fcard.custom-btn:hover{background:#2d2a4a;}
+.fname{font-weight:700;font-size:.875rem;margin-bottom:.25rem;}
+.fprops{font-size:.75rem;color:var(--text2);line-height:1.6;}
+.ftag{display:inline-block;padding:.1rem .4rem;background:var(--primary-light);color:var(--primary);border-radius:4px;font-size:.6875rem;font-weight:700;margin-bottom:.25rem;}
+[data-theme=dark] .ftag{color:#93c5fd;}
+
+/* ── TEMPERATURE SLIDER ── */
+.temp-detail{background:var(--surface2);border-radius:var(--r-sm);padding:1rem;margin:1rem 0;}
+.temp-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;}
+.temp-icon{font-size:1.5rem;}
+.temp-name{font-size:1rem;font-weight:700;}
+.temp-formula{font-size:.8125rem;color:var(--text2);}
+.temp-label{display:flex;justify-content:space-between;align-items:center;font-size:.875rem;font-weight:600;margin-bottom:.375rem;}
+.temp-val{font-size:1.125rem;font-weight:800;color:var(--primary);}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(to right,var(--primary) var(--sldr-pct,50%),var(--border) var(--sldr-pct,50%));outline:none;cursor:pointer;margin:.375rem 0;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(37,99,235,.4);}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;border:none;}
+.temp-range{display:flex;justify-content:space-between;font-size:.6875rem;color:var(--text2);}
+.props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.875rem;}
+@media(max-width:480px){.props-grid{grid-template-columns:1fr;}}
+.prop-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.625rem .75rem;text-align:center;}
+.prop-sym{font-size:.75rem;font-weight:700;color:var(--text2);margin-bottom:.125rem;}
+.prop-val{font-size:.875rem;font-weight:700;font-family:'Courier New',monospace;}
+.prop-unit{font-size:.6875rem;color:var(--text2);}
+.temp-range-warn{font-size:.75rem;color:var(--warning);margin-top:.5rem;text-align:center;}
+
+/* ── CUSTOM FLUID FORM ── */
+.cff{display:flex;flex-direction:column;gap:.75rem;}
+.cff .fg{margin-bottom:0;}
+.cff-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+@media(max-width:420px){.cff-row{grid-template-columns:1fr;}}
 
 /* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-  color: white; padding: 0.75rem 1.5rem; border-radius: 10px;
-  font-size: 0.875rem; font-weight: 600;
-  z-index: 9999; box-shadow: var(--shadow-lg);
-  max-width: 90vw; text-align: center;
-  animation: toastIn 0.3s ease forwards;
-}
-@keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(12px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
-
-/* ── COMPARE ── */
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
-@media (max-width: 520px) { .compare-grid { grid-template-columns: 1fr; } }
-.compare-scenario {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.875rem;
-}
-.compare-scenario h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--surface2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-/* ── PRINT ── */
-@media print {
-  .header-actions, .btn-fluid, .btn-row, .collapsible-trigger,
-  .modal-overlay, #compareSection, #historyCard { display: none !important; }
-  .card { box-shadow: none; border: 1px solid #ccc; }
-}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-size:.875rem;font-weight:600;z-index:9999;box-shadow:var(--shadow-lg);max-width:90vw;text-align:center;animation:toastIn .3s ease forwards;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
 /* ── MISC ── */
-.divider { height: 1px; background: var(--border); margin: 1rem 0; }
-.empty-state { text-align: center; padding: 1.75rem 1rem; color: var(--text-secondary); font-size: 0.875rem; }
-.tag {
-  display: inline-block; padding: 0.125rem 0.5rem;
-  background: var(--primary-light); color: var(--primary);
-  border-radius: 4px; font-size: 0.6875rem; font-weight: 700;
-}
-[data-theme="dark"] .tag { color: #93c5fd; }
+.divider{height:1px;background:var(--border);margin:1rem 0;}
+.empty-state{text-align:center;padding:1.75rem 1rem;color:var(--text2);font-size:.875rem;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--surface2);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media print{.hdr-acts,.btn-fluid,.btn-row,.ctrig,.moverlay{display:none!important;}.card{box-shadow:none;border:1px solid #ccc;}}
 </style>
 </head>
 <body>
-
-<!-- Hidden storage for fluid name -->
 <input type="hidden" id="selectedFluidName" value="—">
 
-<!-- ══════════ HEADER ══════════ -->
-<header class="header">
-  <div class="header-left">
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-l">
     <span style="font-size:1.5rem">⚗️</span>
-    <div>
-      <h1>Reynoldsovo číslo</h1>
-      <div class="header-subtitle">Kalkulačka pro chemické inženýrství</div>
-    </div>
+    <div><h1>Reynoldsovo číslo</h1><div class="hdr-sub">Kalkulačka pro chemické inženýrství</div></div>
   </div>
-  <div class="header-actions">
-    <button class="btn-icon" id="darkModeBtn" title="Tmavý/světlý režim" onclick="toggleDark()">🌙</button>
-    <button class="btn-icon" title="Tisk" onclick="window.print()">🖨️</button>
+  <div class="hdr-acts">
+    <button class="btn-i" id="darkBtn" title="Tmavý/světlý režim" onclick="toggleDark()">🌙</button>
+    <button class="btn-i" title="Tisk" onclick="window.print()">🖨️</button>
   </div>
 </header>
 
-<!-- ══════════ MAIN ══════════ -->
-<div class="container">
-<div class="main-grid">
+<!-- MAIN -->
+<div class="ctn"><div class="mgrid">
 
-  <!-- ── LEFT COLUMN ── -->
+  <!-- LEFT -->
   <div>
-    <!-- Calculator card -->
     <div class="card">
-      <div class="card-title">🎯 Co chci vypočítat?</div>
-      <div class="target-grid">
-        <button class="target-btn active" onclick="setTarget('Re')"  id="btn-Re">Re</button>
-        <button class="target-btn"        onclick="setTarget('v')"   id="btn-v">Rychlost (v)</button>
-        <button class="target-btn"        onclick="setTarget('D')"   id="btn-D">Průměr (D)</button>
-        <button class="target-btn"        onclick="setTarget('mu')"  id="btn-mu">Dyn. visc. (μ)</button>
-        <button class="target-btn"        onclick="setTarget('nu')"  id="btn-nu">Kin. visc. (ν)</button>
-        <button class="target-btn"        onclick="setTarget('rho')" id="btn-rho">Hustota (ρ)</button>
+      <div class="ctitle">🎯 Co chci vypočítat?</div>
+      <div class="tgrid">
+        <button class="tbtn active" onclick="setTarget('Re')"  id="btn-Re">Re</button>
+        <button class="tbtn"        onclick="setTarget('v')"   id="btn-v">Rychlost (v)</button>
+        <button class="tbtn"        onclick="setTarget('D')"   id="btn-D">Průměr (D)</button>
+        <button class="tbtn"        onclick="setTarget('mu')"  id="btn-mu">Dyn. visc. (μ)</button>
+        <button class="tbtn"        onclick="setTarget('nu')"  id="btn-nu">Kin. visc. (ν)</button>
+        <button class="tbtn"        onclick="setTarget('rho')" id="btn-rho">Hustota (ρ)</button>
       </div>
-
-      <button class="btn btn-fluid" onclick="openFluidModal()">
-        💧 Načíst vlastnosti kapaliny
-      </button>
-
-      <!-- Dynamic input fields -->
+      <button class="btn btn-fluid" onclick="openFluidModal()">💧 Načíst vlastnosti kapaliny</button>
       <div id="inputFields"></div>
-
-      <button class="btn btn-primary" onclick="calculate()">⚡ Vypočítat</button>
+      <button class="btn btn-p" onclick="calculate()">⚡ Vypočítat</button>
       <div class="btn-row">
-        <button class="btn btn-secondary" onclick="clearForm()">🗑️ Vymazat</button>
-        <button class="btn btn-secondary" onclick="shareUrl()">🔗 Sdílet</button>
-        <button class="btn btn-secondary" onclick="exportCSV()">📊 Export CSV</button>
+        <button class="btn btn-s" onclick="clearForm()">🗑️ Vymazat</button>
+        <button class="btn btn-s" onclick="shareUrl()">🔗 Sdílet</button>
+        <button class="btn btn-s" onclick="exportCSV()">📊 CSV</button>
       </div>
     </div>
 
-    <!-- Friction factor (shown after calc) -->
     <div class="card" id="frictionCard" style="display:none">
-      <div class="card-title">🔧 Třecí faktor (Darcy-Weisbach)</div>
+      <div class="ctitle">🔧 Třecí faktor (Darcy-Weisbach)</div>
       <div id="frictionContent"></div>
-    </div>
-
-    <!-- Compare section -->
-    <div class="card" id="compareSection" style="display:none">
-      <div class="card-title">⚖️ Porovnávací režim</div>
-      <div class="compare-grid" id="compareGrid"></div>
     </div>
   </div>
 
-  <!-- ── RIGHT COLUMN ── -->
+  <!-- RIGHT -->
   <div>
-    <!-- Result card -->
     <div class="card">
-      <div class="card-title">📊 Výsledek</div>
-      <div id="resultPlaceholder" class="no-result">
-        <span class="no-result-icon">🔢</span>
-        Zadejte hodnoty a stiskněte <strong>Vypočítat</strong>
+      <div class="ctitle">📊 Výsledek</div>
+      <div id="rplaceholder" class="no-result"><span class="no-result-icon">🔢</span>Zadejte hodnoty a stiskněte <strong>Vypočítat</strong></div>
+      <div id="rcard" class="rcard" style="display:none">
+        <div class="r-icon" id="ricon"></div>
+        <div class="r-re"  id="rre"></div>
+        <div class="r-type" id="rtype"></div>
+        <div class="r-desc" id="rdesc"></div>
       </div>
-      <div id="resultCard" class="result-card" style="display:none">
-        <div class="result-icon" id="resultIcon"></div>
-        <div class="result-re"  id="resultRe"></div>
-        <div class="result-type" id="resultType"></div>
-        <div class="result-desc" id="resultDesc"></div>
-      </div>
-
-      <!-- Visualization -->
-      <div id="vizContainer" style="display:none">
+      <div id="vizCtn" style="display:none">
         <div class="divider"></div>
-        <div class="card-title-sm">Pozice na škále proudění</div>
-        <div class="viz-wrap">
-          <div class="scale-bar">
-            <div class="scale-marker" id="scaleMarker" data-value="Re=?"></div>
-          </div>
-          <div class="scale-zones">
-            <span>Re=1</span>
-            <span>Laminární</span>
-            <span>2300 | 4000</span>
-            <span>Turbulentní</span>
-            <span>Re=10⁸</span>
-          </div>
-          <div class="streamlines-wrap" style="margin-top:0.875rem">
-            <div class="card-title-sm" style="padding:0.5rem 0.75rem 0;margin:0">Vizualizace proudění</div>
-            <svg class="streamlines" id="streamlinesSvg" viewBox="0 0 400 72" preserveAspectRatio="none"></svg>
+        <div class="csub">Pozice na škále proudění</div>
+        <div class="viz">
+          <div class="sbar"><div class="smark" id="smark" data-value="Re=?"></div></div>
+          <div class="szones"><span>Re=1</span><span>Laminární</span><span>2300|4000</span><span>Turbulentní</span><span>Re=10⁸</span></div>
+          <div class="svgwrap" style="margin-top:.875rem">
+            <div class="csub" style="padding:.5rem .75rem 0;margin:0">Vizualizace proudění</div>
+            <svg class="sl" id="slSvg" viewBox="0 0 400 72" preserveAspectRatio="none"></svg>
           </div>
         </div>
       </div>
-
-      <!-- Params display -->
-      <div id="additionalResults" style="display:none">
+      <div id="addResults" style="display:none">
         <div class="divider"></div>
-        <div class="card-title-sm">Vstupní parametry (SI jednotky)</div>
+        <div class="csub">Vstupní parametry (SI)</div>
         <div id="paramsDisplay"></div>
       </div>
     </div>
 
-    <!-- History -->
-    <div class="card" id="historyCard">
-      <div class="card-title">
-        📜 Historie výpočtů
-        <button class="btn btn-secondary" onclick="clearHistory()"
-          style="margin-left:auto;padding:0.25rem 0.625rem;font-size:0.75rem">Vymazat</button>
+    <div class="card" id="histCard">
+      <div class="ctitle">📜 Historie
+        <button class="btn btn-s" onclick="clearHistory()" style="margin-left:auto;padding:.25rem .625rem;font-size:.75rem">Vymazat</button>
       </div>
-      <div id="historyContent">
-        <div class="empty-state">📋 Zatím žádné výpočty</div>
-      </div>
+      <div id="histContent"><div class="empty-state">📋 Zatím žádné výpočty</div></div>
     </div>
 
-    <!-- Theory -->
     <div class="card">
-      <div class="collapsible-trigger" onclick="toggleCollapsible('theory')">
-        <span>📚 Teorie a vzorce</span>
-        <span id="arrow-theory">▼</span>
-      </div>
-      <div class="collapsible-body" id="body-theory">
-        <div class="collapsible-inner">
-          <h4 class="section-h" style="margin-top:0">Co je Reynoldsovo číslo?</h4>
-          <p class="theory-p">Reynoldsovo číslo (Re) je bezrozměrné číslo vyjadřující poměr <strong>setrvačných sil</strong> k <strong>viskózním silám</strong> v proudícím fluidu. Bylo pojmenováno po irském fyzikovi Osbornu Reynoldsovi, který ho zavedl v roce 1883.</p>
-
-          <h4 class="section-h">Základní vzorce</h4>
-          <div class="formula">Re = (ρ × v × D) / μ</div>
-          <div class="formula">Re = (v × D) / ν</div>
-          <div class="formula">ν = μ / ρ</div>
-          <p class="theory-p" style="margin-top:0.5rem">
-            ρ = hustota [kg/m³] &nbsp;|&nbsp; v = rychlost [m/s] &nbsp;|&nbsp; D = průměr [m]<br>
-            μ = dyn. viskozita [Pa·s] &nbsp;|&nbsp; ν = kin. viskozita [m²/s]
-          </p>
-
-          <h4 class="section-h">Klasifikace proudění</h4>
-          <table class="theory-tbl">
-            <tr><th>Typ proudění</th><th>Reynoldsovo číslo</th><th>Charakteristika</th></tr>
-            <tr><td>🟢 Laminární</td><td>Re &lt; 2 300</td><td>Vrstevnaté, klidné</td></tr>
-            <tr><td>🟡 Přechodová oblast</td><td>2 300 – 4 000</td><td>Nestabilní</td></tr>
-            <tr><td>🔴 Turbulentní</td><td>Re &gt; 4 000</td><td>Chaotické, vírivé</td></tr>
-          </table>
-
-          <h4 class="section-h">Typické hodnoty Re v praxi</h4>
-          <table class="theory-tbl">
-            <tr><th>Situace</th><th>Typické Re</th></tr>
-            <tr><td>Krev v kapilárách</td><td>1 – 10</td></tr>
-            <tr><td>Krev v tepnách</td><td>10 – 4 000</td></tr>
-            <tr><td>Voda v domovním potrubí</td><td>2 000 – 20 000</td></tr>
-            <tr><td>Průmyslové potrubí</td><td>10 000 – 200 000</td></tr>
-            <tr><td>Velká řeka (Mississippi)</td><td>10⁵ – 10⁶</td></tr>
-            <tr><td>Proudění kolem letadla</td><td>10⁶ – 10⁸</td></tr>
-            <tr><td>Atmosférické proudění</td><td>10⁸ – 10⁹</td></tr>
-          </table>
-
-          <h4 class="section-h">Třecí ztráty – Moodyho diagram</h4>
-          <p class="theory-p">Moodyho diagram zobrazuje závislost Darcyho třecího faktoru (f) na Re a relativní drsnosti potrubí (ε/D):</p>
-          <ul class="theory-ul">
-            <li><strong>Laminární (Re &lt; 2 300):</strong> f = 64/Re — Hagen-Poiseuille, přesné analytické řešení</li>
-            <li><strong>Přechodová oblast:</strong> nelze spolehlivě predikovat — nutno se vyhnout nebo použít konzervativní odhad</li>
-            <li><strong>Turbulentní, hladké potrubí (Re &lt; 10⁵):</strong> f = 0,316 × Re⁻⁰·²⁵ (Blasius)</li>
-            <li><strong>Turbulentní, drsné potrubí:</strong> Colebrook-White rovnice (iterativní nebo Swamee-Jain aproximace)</li>
-          </ul>
-          <div class="formula" style="margin-top:0.75rem">ΔP = f × (L/D) × (ρ × v²/2)</div>
-          <p class="theory-p">kde L = délka potrubí [m], D = průměr [m]</p>
-        </div>
-      </div>
+      <div class="ctrig" onclick="toggleColl('theory')"><span>📚 Teorie a vzorce</span><span id="arr-theory">▼</span></div>
+      <div class="cbody" id="body-theory"><div class="cinner">
+        <h4 class="sh" style="margin-top:0">Co je Reynoldsovo číslo?</h4>
+        <p class="tp">Reynoldsovo číslo (Re) vyjadřuje poměr <strong>setrvačných sil</strong> k <strong>viskózním silám</strong>. Zavedl ho Osborne Reynolds v roce 1883.</p>
+        <h4 class="sh">Základní vzorce</h4>
+        <div class="formula">Re = (ρ × v × D) / μ</div>
+        <div class="formula">Re = (v × D) / ν &nbsp;&nbsp; kde: ν = μ / ρ</div>
+        <p class="tp">ρ [kg/m³] | v [m/s] | D [m] | μ [Pa·s] | ν [m²/s]</p>
+        <h4 class="sh">Klasifikace proudění</h4>
+        <table class="ttbl"><tr><th>Typ</th><th>Re</th><th>Charakter</th></tr>
+          <tr><td>🟢 Laminární</td><td>Re &lt; 2 300</td><td>Klidné, vrstevnaté</td></tr>
+          <tr><td>🟡 Přechodová oblast</td><td>2 300–4 000</td><td>Nestabilní</td></tr>
+          <tr><td>🔴 Turbulentní</td><td>Re &gt; 4 000</td><td>Chaotické, vírivé</td></tr>
+        </table>
+        <h4 class="sh">Typické hodnoty Re v praxi</h4>
+        <table class="ttbl"><tr><th>Situace</th><th>Re</th></tr>
+          <tr><td>Krev v kapilárách</td><td>1–10</td></tr>
+          <tr><td>Krev v tepnách</td><td>10–4 000</td></tr>
+          <tr><td>Domovní potrubí</td><td>2 000–20 000</td></tr>
+          <tr><td>Průmyslové potrubí</td><td>10 000–200 000</td></tr>
+          <tr><td>Velká řeka</td><td>10⁵–10⁶</td></tr>
+          <tr><td>Proudění kolem letadla</td><td>10⁶–10⁸</td></tr>
+        </table>
+        <h4 class="sh">Třecí ztráty – Moodyho diagram</h4>
+        <ul class="tul">
+          <li><strong>Laminární (Re &lt; 2 300):</strong> f = 64/Re (Hagen-Poiseuille)</li>
+          <li><strong>Turbulentní hladké (Re &lt; 10⁵):</strong> f = 0,316 × Re⁻⁰·²⁵ (Blasius)</li>
+          <li><strong>Turbulentní drsné:</strong> Colebrook-White rovnice</li>
+        </ul>
+        <div class="formula" style="margin-top:.75rem">ΔP = f × (L/D) × (ρ×v²/2)</div>
+      </div></div>
     </div>
   </div>
 
-</div><!-- end main-grid -->
-</div><!-- end container -->
+</div></div>
 
-<!-- ══════════ FLUID MODAL ══════════ -->
-<div class="modal-overlay" id="fluidModal" onclick="closeModalOnOverlay(event,'fluidModal')">
-  <div class="modal">
-    <div class="modal-title">💧 Vyberte kapalinu</div>
-    <div class="fluid-grid" id="fluidGrid"></div>
-    <div style="margin-top:1rem;text-align:right">
-      <button class="btn btn-secondary" style="flex:initial" onclick="closeModal('fluidModal')">Zavřít</button>
-    </div>
+<!-- ══ FLUID MODAL ══ -->
+<div class="moverlay" id="fluidModal" onclick="closeOverlay(event,'fluidModal')">
+<div class="modal">
+  <div class="mtitle">
+    <span id="mTitle">💧 Vyberte kapalinu</span>
+    <button class="btn-i" style="background:var(--surface2);color:var(--text)" onclick="closeModal('fluidModal')">✕</button>
   </div>
+
+  <!-- Step 1: fluid grid -->
+  <div id="mStep1">
+    <div style="display:flex;gap:.5rem;margin-bottom:.75rem;flex-wrap:wrap" id="categoryFilter"></div>
+    <div class="fgrid" id="fluidGrid"></div>
+  </div>
+
+  <!-- Step 2: temperature selection -->
+  <div id="mStep2" style="display:none">
+    <button class="btn btn-s" style="margin-bottom:1rem;width:auto" onclick="goStep1()">← Zpět</button>
+    <div class="temp-detail">
+      <div class="temp-header">
+        <span class="temp-icon" id="detailIcon"></span>
+        <div><div class="temp-name" id="detailName"></div><div class="temp-formula" id="detailFormula"></div></div>
+        <span class="ftag" id="detailCat" style="margin-left:auto"></span>
+      </div>
+      <div class="temp-label">
+        <span>Teplota</span>
+        <span class="temp-val" id="tempDisplay">20 °C</span>
+      </div>
+      <input type="range" id="tempSlider" min="0" max="100" value="20" oninput="onTempChange()" style="--sldr-pct:20%">
+      <div class="temp-range"><span id="tRangeMin"></span><span id="tRangeMax"></span></div>
+      <div id="tempWarn" class="temp-range-warn" style="display:none"></div>
+      <div class="props-grid">
+        <div class="prop-box"><div class="prop-sym">ρ</div><div class="prop-val" id="pRho">—</div><div class="prop-unit">kg/m³</div></div>
+        <div class="prop-box"><div class="prop-sym">μ</div><div class="prop-val" id="pMu">—</div><div class="prop-unit">mPa·s</div></div>
+        <div class="prop-box"><div class="prop-sym">ν</div><div class="prop-val" id="pNu">—</div><div class="prop-unit">10⁻⁶ m²/s</div></div>
+      </div>
+    </div>
+    <button class="btn btn-p" onclick="applyFluid()" style="margin-top:.5rem">✅ Použít v kalkulačce</button>
+  </div>
+
+  <!-- Step 3: custom fluid -->
+  <div id="mCustom" style="display:none">
+    <button class="btn btn-s" style="margin-bottom:1rem;width:auto" onclick="goStep1()">← Zpět</button>
+    <div class="cff">
+      <div class="fg"><label>Název kapaliny</label><input type="text" id="cf-name" placeholder="napr. Benzen-toluen směs" style="width:100%;padding:.625rem .875rem;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);font-size:.9375rem;outline:none;"></div>
+      <div class="cff-row">
+        <div class="fg"><label>Teplota (°C)</label><input type="number" id="cf-temp" placeholder="20" value="20" style="width:100%"></div>
+        <div class="fg"><label>Hustota ρ (kg/m³)</label><input type="number" id="cf-rho" placeholder="998" style="width:100%"></div>
+      </div>
+      <div class="fg"><label>Dynamická viskozita μ — zadejte <strong>jednu</strong> z možností:</label></div>
+      <div class="cff-row">
+        <div class="fg"><label>μ [mPa·s = cP]</label><input type="number" id="cf-mu-cp" placeholder="napr. 1.002" style="width:100%"></div>
+        <div class="fg"><label>ν [mm²/s = cSt]</label><input type="number" id="cf-nu-cst" placeholder="napr. 1.004" style="width:100%"></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--text2)">💡 Pokud zadáte μ i ρ, ν se dopočítá automaticky. Nebo zadejte přímo ν.</div>
+      <div style="display:flex;gap:.5rem;margin-top:.25rem">
+        <button class="btn btn-p" onclick="saveCustomFluid()" style="margin-top:0">💾 Uložit a použít</button>
+        <button class="btn btn-s" onclick="previewCustomFluid()">👁 Jen použít</button>
+      </div>
+    </div>
+    <div id="customSaved" style="margin-top:1rem"></div>
+  </div>
+
+  <!-- Saved custom fluids -->
+  <div id="mSavedCustom" style="display:none;margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem">
+    <div class="csub">Moje vlastní kapaliny</div>
+    <div id="savedCustomGrid" class="fgrid"></div>
+  </div>
+</div>
 </div>
 
 <script>
 // ================================================================
-// DATA
+// FLUID DATABASE (data: [temp_°C, rho_kg/m³, mu_mPa·s])
+// Zdroj: VŠCHT e-tabulky, Engineering Toolbox, literatura
 // ================================================================
-const FLUIDS = [
-  { name:'Voda',        temp:'20°C',        icon:'💧', rho:998,   mu:1.002e-3, nu:1.004e-6 },
-  { name:'Voda',        temp:'100°C',        icon:'♨️', rho:958,   mu:0.282e-3, nu:null     },
-  { name:'Ethanol',     temp:'20°C',        icon:'🍷', rho:789,   mu:1.2e-3,   nu:null     },
-  { name:'Glycerol',    temp:'20°C',        icon:'🫙', rho:1260,  mu:1412e-3,  nu:null     },
-  { name:'Vzduch',      temp:'20°C, 1 atm', icon:'💨', rho:1.204, mu:null,     nu:15.11e-6 },
-  { name:'Olej SAE 30', temp:'20°C',        icon:'🛢️', rho:919,   mu:440e-3,   nu:null     }
-];
-// Fill missing nu/mu
-FLUIDS.forEach(f => {
-  if (f.nu === null && f.mu !== null && f.rho !== null) f.nu = f.mu / f.rho;
-  if (f.mu === null && f.nu !== null && f.rho !== null) f.mu = f.nu * f.rho;
-});
+const FLUID_DB = [
+  { id:'water', name:'Voda', formula:'H₂O', icon:'💧', cat:'Kapaliny', tempMin:0, tempMax:100,
+    data:[[0,999.84,1.792],[10,999.70,1.307],[20,998.21,1.002],[25,997.05,0.890],
+          [30,995.65,0.797],[40,992.22,0.653],[50,988.04,0.546],[60,983.20,0.466],
+          [70,977.76,0.404],[80,971.79,0.353],[90,965.31,0.312],[100,958.35,0.282]] },
 
-// Conversion factors → SI
+  { id:'ethanol', name:'Ethanol', formula:'C₂H₅OH', icon:'🍷', cat:'Kapaliny', tempMin:0, tempMax:75,
+    data:[[0,806.4,1.873],[10,798.0,1.470],[20,789.0,1.200],[25,783.9,1.074],
+          [30,778.8,0.983],[40,771.0,0.826],[50,762.0,0.684],[60,752.0,0.578],[75,736.0,0.459]] },
+
+  { id:'methanol', name:'Methanol', formula:'CH₃OH', icon:'⚗️', cat:'Kapaliny', tempMin:0, tempMax:100,
+    data:[[0,810.0,0.797],[20,792.0,0.594],[25,787.0,0.543],[30,782.0,0.507],
+          [50,763.0,0.392],[75,735.0,0.294],[100,704.0,0.227]] },
+
+  { id:'glycerol', name:'Glycerol', formula:'C₃H₈O₃', icon:'🫙', cat:'Kapaliny', tempMin:2, tempMax:100,
+    data:[[2,1425.3,5000],[20,1260.0,1412],[48,1243.1,190.9],[74,1226.1,47.3],[100,1209.0,14.8]] },
+
+  { id:'toluene', name:'Toluen', formula:'C₇H₈', icon:'🧪', cat:'Kapaliny', tempMin:0, tempMax:80,
+    data:[[0,884.0,0.768],[15,871.3,0.630],[20,866.7,0.590],[25,862.1,0.560],
+          [30,857.4,0.530],[50,839.0,0.450],[80,810.0,0.350]] },
+
+  { id:'benzene', name:'Benzen', formula:'C₆H₆', icon:'⬡', cat:'Kapaliny', tempMin:5, tempMax:127,
+    data:[[5.55,893.0,0.828],[26.9,871.0,0.596],[46.9,849.0,0.453],[86.9,807.0,0.281],[127,760.0,0.189]] },
+
+  { id:'acetone', name:'Aceton', formula:'C₃H₆O', icon:'💊', cat:'Kapaliny', tempMin:0, tempMax:100,
+    data:[[0,812.0,0.400],[20,790.8,0.316],[25,786.0,0.303],[30,780.0,0.292],[50,762.0,0.250],[75,737.0,0.202],[100,710.0,0.169]] },
+
+  { id:'ethgly', name:'Ethylenglykol', formula:'C₂H₆O₂', icon:'🧴', cat:'Kapaliny', tempMin:0, tempMax:100,
+    data:[[0,1130.0,57.5],[20,1113.0,21.0],[25,1110.0,16.1],[40,1097.0,9.86],[60,1080.0,5.39],[80,1063.0,3.24],[100,1046.0,2.11]] },
+
+  { id:'propgly', name:'Propylenglykol', formula:'C₃H₈O₂', icon:'🧴', cat:'Kapaliny', tempMin:0, tempMax:100,
+    data:[[0,1060.0,280],[20,1038.0,52.0],[25,1035.0,40.4],[40,1025.0,18.3],[60,1012.0,8.49],[80,998.0,4.33],[100,982.0,2.35]] },
+
+  { id:'mercury', name:'Rtuť', formula:'Hg', icon:'🌡️', cat:'Kapaliny', tempMin:0, tempMax:250,
+    data:[[0,13595,1.686],[20,13545,1.544],[50,13472,1.401],[100,13351,1.242],
+          [150,13231,1.125],[200,13112,1.049],[250,12993,1.000]] },
+
+  { id:'sae30', name:'Olej SAE 30', formula:'—', icon:'🛢️', cat:'Oleje', tempMin:0, tempMax:100,
+    data:[[0,900,1124.10],[20,894,440.00],[40,882,100.00],[100,860,8.80]] },
+
+  { id:'sae10w40', name:'Olej SAE 10W-40', formula:'—', icon:'🛢️', cat:'Oleje', tempMin:0, tempMax:100,
+    data:[[0,890,735.42],[20,880,180.00],[40,870,62.00],[100,845,11.88]] },
+
+  { id:'air', name:'Vzduch', formula:'N₂+O₂', icon:'💨', cat:'Plyny', tempMin:-50, tempMax:300,
+    data:[[-50,1.393,0.01456],[-30,1.316,0.01544],[0,1.293,0.01716],[20,1.204,0.01813],
+          [40,1.127,0.01908],[60,1.060,0.01999],[80,0.999,0.02088],[100,0.946,0.02173],
+          [150,0.835,0.02385],[200,0.746,0.02577],[300,0.616,0.02934]] },
+
+  { id:'steam', name:'Vodní pára', formula:'H₂O (g)', icon:'💨', cat:'Plyny', tempMin:100, tempMax:400,
+    data:[[100,0.598,0.01228],[150,0.517,0.01421],[200,0.461,0.01620],[250,0.416,0.01820],
+          [300,0.379,0.02014],[350,0.348,0.02208],[400,0.322,0.02400]] }
+];
+
+// ================================================================
+// UNIT CONVERSIONS → SI
+// ================================================================
 const CONV = {
   v:   { 'm/s':1, 'cm/s':0.01, 'ft/s':0.3048 },
   D:   { 'm':1, 'cm':0.01, 'mm':0.001, 'inch':0.0254 },
@@ -677,17 +473,16 @@ const CONV = {
 };
 const DEF_UNIT = { v:'m/s', D:'m', rho:'kg/m³', mu:'cP', nu:'m²/s' };
 
-// Field metadata
+// Field metadata: sci=true → uses coefficient × 10^exp format
 const FIELDS = {
-  Re:  { label:'Reynoldsovo číslo (Re)',             placeholder:'napr. 10000',  noUnit:true },
-  v:   { label:'Rychlost proudění (v)',              placeholder:'napr. 2',      key:'v'   },
-  D:   { label:'Průměr / char. rozměr (D)',          placeholder:'napr. 0.05',   key:'D'   },
-  rho: { label:'Hustota kapaliny (ρ)',               placeholder:'napr. 998',    key:'rho' },
-  mu:  { label:'Dynamická viskozita (μ)',            placeholder:'napr. 1.002',  key:'mu'  },
-  nu:  { label:'Kinematická viskozita (ν)',          placeholder:'napr. 1e-6',   key:'nu'  }
+  Re:  { label:'Reynoldsovo číslo (Re)',          placeholder:'napr. 10000', noUnit:true, sci:false },
+  v:   { label:'Rychlost proudění (v)',           placeholder:'napr. 2',     key:'v',     sci:false },
+  D:   { label:'Průměr / char. rozměr (D)',       placeholder:'napr. 0.05',  key:'D',     sci:false },
+  rho: { label:'Hustota kapaliny (ρ)',            placeholder:'napr. 998',   key:'rho',   sci:false },
+  mu:  { label:'Dynamická viskozita (μ)',         placeholder:'napr. 1.002', key:'mu',    sci:true  },
+  nu:  { label:'Kinematická viskozita (ν)',       placeholder:'napr. 1.004', key:'nu',    sci:true  }
 };
 
-// Required inputs for each target
 const REQ = {
   Re:  ['v','D','rho','mu','nu'],
   v:   ['Re','D','rho','mu','nu'],
@@ -702,35 +497,34 @@ const REQ = {
 // ================================================================
 let currentTarget = 'Re';
 let calcHistory = [];
-let lastResult = null;
+let selectedFluidIdx = -1;
+let selectedTemp = 20;
+let fieldSIValues = {};  // cached SI values for auto-conversion on unit change
 
 // ================================================================
 // INIT
 // ================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Dark mode
   if (localStorage.getItem('darkMode') === 'true') {
     document.documentElement.setAttribute('data-theme','dark');
-    document.getElementById('darkModeBtn').textContent = '☀️';
+    document.getElementById('darkBtn').textContent = '☀️';
   }
-  // History
-  try { calcHistory = JSON.parse(localStorage.getItem('reHistory') || '[]'); } catch(e) { calcHistory = []; }
-
+  try { calcHistory = JSON.parse(localStorage.getItem('reHistory') || '[]'); } catch(e) { calcHistory=[]; }
   renderFluidGrid();
   renderInputFields();
   renderHistory();
-  loadFromUrl();       // URL params take priority
-  loadLastValues();    // then localStorage fallback (only if URL had no params)
+  loadFromUrl();
+  loadLastValues();
 });
 
 // ================================================================
 // DARK MODE
 // ================================================================
 function toggleDark() {
-  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
-  document.getElementById('darkModeBtn').textContent = dark ? '🌙' : '☀️';
-  localStorage.setItem('darkMode', !dark);
+  const d = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', d ? 'light' : 'dark');
+  document.getElementById('darkBtn').textContent = d ? '🌙' : '☀️';
+  localStorage.setItem('darkMode', !d);
 }
 
 // ================================================================
@@ -738,69 +532,191 @@ function toggleDark() {
 // ================================================================
 function setTarget(t) {
   currentTarget = t;
-  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-' + t).classList.add('active');
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+t).classList.add('active');
   renderInputFields();
 }
 
 function renderInputFields() {
   const fields = REQ[currentTarget];
   let html = '';
-
   fields.forEach(f => {
-    const meta = FIELDS[f];
-    if (meta.noUnit) {
-      html += `
-        <div class="form-group">
-          <label>${meta.label}</label>
-          <div class="input-row">
-            <input type="number" id="input-${f}" placeholder="${meta.placeholder}" min="0" step="any" oninput="validateInput(this)">
-            <span class="unit-label">[-]</span>
-          </div>
-        </div>`;
+    const m = FIELDS[f];
+    if (m.noUnit) {
+      html += `<div class="fg"><label>${m.label}</label>
+        <div class="irow"><input type="number" id="input-${f}" placeholder="${m.placeholder}" min="0" step="any" oninput="validateInp(this)"><span class="ulabel">[-]</span></div></div>`;
+    } else if (m.sci) {
+      html += renderSciGroup(f);
     } else {
-      const key = meta.key;
-      const units = Object.keys(CONV[key]);
-      const defU = DEF_UNIT[key];
-      const opts = units.map(u => `<option value="${u}"${u===defU?' selected':''}>${u}</option>`).join('');
-      html += `
-        <div class="form-group">
-          <label>${meta.label}</label>
-          <div class="input-row">
-            <input type="number" id="input-${f}" placeholder="${meta.placeholder}" min="0" step="any" oninput="validateInput(this)">
-            <select id="unit-${f}">${opts}</select>
-          </div>
-        </div>`;
+      const units = Object.keys(CONV[m.key]);
+      const opts = units.map(u=>`<option value="${u}"${u===DEF_UNIT[m.key]?' selected':''}>${u}</option>`).join('');
+      html += `<div class="fg"><label>${m.label}</label>
+        <div class="irow">
+          <input type="number" id="input-${f}" placeholder="${m.placeholder}" min="0" step="any" oninput="validateInp(this)">
+          <select id="unit-${f}" data-key="${m.key}" onchange="onUnitChange('${f}')">${opts}</select>
+        </div></div>`;
     }
   });
-
   // Hint
-  if (currentTarget === 'Re') {
-    html += `<div class="hint-box">ℹ️ Potřebujete: <strong>v + D + (ρ + μ)</strong> nebo <strong>v + D + ν</strong></div>`;
-  } else if (['v','D'].includes(currentTarget)) {
-    html += `<div class="hint-box">ℹ️ Potřebujete: <strong>Re + druhý rozměr + (ρ + μ)</strong> nebo <strong>Re + druhý rozměr + ν</strong></div>`;
-  }
-
+  if (currentTarget === 'Re') html += `<div class="hint">ℹ️ Potřebujete: <strong>v + D + (ρ + μ)</strong> nebo <strong>v + D + ν</strong></div>`;
+  else if (['v','D'].includes(currentTarget)) html += `<div class="hint">ℹ️ Potřebujete: <strong>Re + druhý rozměr + (ρ + μ)</strong> nebo <strong>Re + druhý rozměr + ν</strong></div>`;
   document.getElementById('inputFields').innerHTML = html;
 }
 
-function validateInput(el) {
+function renderSciGroup(field) {
+  const m = FIELDS[field];
+  const key = m.key;
+  const units = Object.keys(CONV[key]);
+  const defU = DEF_UNIT[key];
+  const defExp = (field === 'nu') ? -6 : (defU === 'cP' ? 0 : -3);
+  const expOpts = [3,2,1,0,-1,-2,-3,-4,-5,-6,-7,-8,-9]
+    .map(e=>`<option value="${e}"${e===defExp?' selected':''}>${e >= 0 ? '+'+e : e}</option>`).join('');
+  const unitOpts = units.map(u=>`<option value="${u}"${u===defU?' selected':''}>${u}</option>`).join('');
+  return `<div class="fg"><label>${m.label}</label>
+    <div class="sci-row">
+      <input type="number" class="sci-coef" id="sci-c-${field}" placeholder="${m.placeholder}" step="any" oninput="onSciInput('${field}')">
+      <span class="sci-times">×10^</span>
+      <select class="sci-exp" id="sci-e-${field}" onchange="onSciInput('${field}')">${expOpts}</select>
+      <select class="sci-unit" id="unit-${field}" data-key="${key}" onchange="onSciUnitChange('${field}')">${unitOpts}</select>
+    </div>
+    <div class="sci-preview" id="sci-p-${field}"></div>
+  </div>`;
+}
+
+function validateInp(el) {
   const v = parseFloat(el.value);
-  el.classList.toggle('error', el.value !== '' && (isNaN(v) || v < 0));
+  el.classList.toggle('err', el.value !== '' && (isNaN(v) || v < 0));
 }
 
 // ================================================================
-// GET SI VALUE FROM INPUT
+// SCI-NOTATION HELPERS
+// ================================================================
+function onSciInput(field) {
+  const si = getSciSI(field);
+  if (si !== null) fieldSIValues[field] = si;
+  updateSciPreview(field);
+}
+
+function onSciUnitChange(field) {
+  // Convert displayed value to new unit if we have a cached SI value
+  if (fieldSIValues[field] != null) {
+    setSciFromSI(field, fieldSIValues[field]);
+  }
+  updateSciPreview(field);
+}
+
+function onUnitChange(field) {
+  // Regular (non-sci) unit change: convert if value present
+  const m = FIELDS[field];
+  if (!m || m.sci || m.noUnit) return;
+  const si = fieldSIValues[field];
+  if (si == null) return;
+  const sel = document.getElementById('unit-'+field);
+  const unit = sel ? sel.value : DEF_UNIT[m.key];
+  const valueInUnit = si / CONV[m.key][unit];
+  const inp = document.getElementById('input-'+field);
+  if (inp) inp.value = parseFloat(valueInUnit.toPrecision(5));
+}
+
+function getSciSI(field) {
+  const m = FIELDS[field];
+  if (!m || !m.sci) return null;
+  const coef = parseFloat(document.getElementById('sci-c-'+field)?.value);
+  const exp  = parseInt(document.getElementById('sci-e-'+field)?.value || '0');
+  const sel  = document.getElementById('unit-'+field);
+  const unit = sel ? sel.value : DEF_UNIT[m.key];
+  if (isNaN(coef) || coef <= 0) return null;
+  return coef * Math.pow(10, exp) * CONV[m.key][unit];
+}
+
+function setSciFromSI(field, siVal) {
+  const m = FIELDS[field];
+  if (!m || !m.sci) return;
+  const sel  = document.getElementById('unit-'+field);
+  const unit = sel ? sel.value : DEF_UNIT[m.key];
+  const valueInUnit = siVal / CONV[m.key][unit];
+  if (!isFinite(valueInUnit) || valueInUnit <= 0) return;
+  const expOptions = [3,2,1,0,-1,-2,-3,-4,-5,-6,-7,-8,-9];
+  const idealExp = Math.floor(Math.log10(valueInUnit));
+  const exp = expOptions.reduce((a,b) => Math.abs(b-idealExp) < Math.abs(a-idealExp) ? b : a);
+  const coef = valueInUnit / Math.pow(10, exp);
+  document.getElementById('sci-c-'+field).value = parseFloat(coef.toPrecision(5));
+  document.getElementById('sci-e-'+field).value = exp;
+  fieldSIValues[field] = siVal;
+  updateSciPreview(field);
+}
+
+function updateSciPreview(field) {
+  const si = getSciSI(field);
+  const el = document.getElementById('sci-p-'+field);
+  if (!el) return;
+  if (si === null || !isFinite(si)) { el.textContent = ''; return; }
+  const siUnit = (field === 'mu') ? 'Pa·s' : 'm²/s';
+  el.textContent = `= ${si.toExponential(4)} ${siUnit}`;
+}
+
+// ================================================================
+// GET SI FROM ANY INPUT
 // ================================================================
 function getSI(field) {
-  const inp = document.getElementById('input-' + field);
-  if (!inp || inp.value.trim() === '') return null;
+  const m = FIELDS[field];
+  if (!m) return null;
+  if (m.sci) return getSciSI(field);
+  if (m.noUnit) {
+    const inp = document.getElementById('input-'+field);
+    if (!inp || inp.value.trim()==='') return null;
+    const v = parseFloat(inp.value);
+    return (isNaN(v) || v <= 0) ? null : v;
+  }
+  const inp = document.getElementById('input-'+field);
+  if (!inp || inp.value.trim()==='') return null;
   const raw = parseFloat(inp.value);
   if (isNaN(raw) || raw <= 0) return null;
-  if (FIELDS[field].noUnit) return raw;           // Re — dimensionless
-  const sel = document.getElementById('unit-' + field);
-  const unit = sel ? sel.value : DEF_UNIT[FIELDS[field].key];
-  return raw * CONV[FIELDS[field].key][unit];
+  const sel = document.getElementById('unit-'+field);
+  const unit = sel ? sel.value : DEF_UNIT[m.key];
+  const si = raw * CONV[m.key][unit];
+  fieldSIValues[field] = si;
+  return si;
+}
+
+// Set a non-sci field from SI value
+function setFieldFromSI(field, siVal) {
+  const m = FIELDS[field];
+  if (!m || m.sci || m.noUnit) return;
+  const sel  = document.getElementById('unit-'+field);
+  const unit = sel ? sel.value : DEF_UNIT[m.key];
+  const valueInUnit = siVal / CONV[m.key][unit];
+  const inp = document.getElementById('input-'+field);
+  if (inp) inp.value = parseFloat(valueInUnit.toPrecision(5));
+  fieldSIValues[field] = siVal;
+}
+
+// ================================================================
+// FLUID INTERPOLATION
+// ================================================================
+function getAllFluids() {
+  const custom = getCustomFluids();
+  return [...FLUID_DB, ...custom];
+}
+
+function interpolate(fluid, tempC) {
+  const data = fluid.data;
+  const t = Math.max(fluid.tempMin, Math.min(fluid.tempMax, tempC));
+  if (t <= data[0][0]) {
+    const d = data[0]; const mu = d[2]*1e-3;
+    return { rho:d[1], mu, nu:mu/d[1], temp:t };
+  }
+  if (t >= data[data.length-1][0]) {
+    const d = data[data.length-1]; const mu = d[2]*1e-3;
+    return { rho:d[1], mu, nu:mu/d[1], temp:t };
+  }
+  let i = 0;
+  while (i < data.length-1 && data[i+1][0] < t) i++;
+  const [t0,r0,m0] = data[i], [t1,r1,m1] = data[i+1];
+  const f = (t-t0)/(t1-t0);
+  const rho = r0 + f*(r1-r0);
+  const mu  = (m0 + f*(m1-m0)) * 1e-3;
+  return { rho, mu, nu:mu/rho, temp:t };
 }
 
 // ================================================================
@@ -808,210 +724,151 @@ function getSI(field) {
 // ================================================================
 function calculate() {
   const fields = REQ[currentTarget];
-  const v = {};
-  fields.forEach(f => { v[f] = getSI(f); });
+  const v = {}; fields.forEach(f => { v[f] = getSI(f); });
 
-  let Re, vel, D, rho, mu, nu;
-
-  // Helper: resolve effective ν
-  function resolveNu(nuVal, rhoVal, muVal) {
-    if (nuVal !== null) return nuVal;
-    if (rhoVal !== null && muVal !== null) return muVal / rhoVal;
+  function resolveNu(nu, rho, mu) {
+    if (nu !== null) return nu;
+    if (rho !== null && mu !== null) return mu/rho;
     return null;
   }
 
+  let Re, vel, D, rho, mu, nu;
+
   if (currentTarget === 'Re') {
-    vel = v.v; D = v.D; rho = v.rho; mu = v.mu; nu = v.nu;
-    if (vel === null || D === null) { showToast('Zadejte rychlost (v) a průměr (D).','error'); return; }
+    vel=v.v; D=v.D; rho=v.rho; mu=v.mu; nu=v.nu;
+    if (vel===null||D===null) { toast('Zadejte rychlost (v) a průměr (D).','error'); return; }
     const effNu = resolveNu(nu, rho, mu);
-    if (effNu === null) { showToast('Zadejte kinematickou viskozitu (ν) nebo hustotu (ρ) + dynamickou viskozitu (μ).','error'); return; }
-    Re = (vel * D) / effNu;
-    if (nu === null && rho !== null && mu !== null) nu = mu / rho;
-
+    if (effNu===null) { toast('Zadejte ν nebo (ρ + μ).','error'); return; }
+    Re = (vel*D)/effNu;
+    if (nu===null && rho!==null && mu!==null) nu=mu/rho;
   } else if (currentTarget === 'v') {
-    Re = v.Re; D = v.D; rho = v.rho; mu = v.mu; nu = v.nu;
-    if (Re === null || D === null) { showToast('Zadejte Re a průměr (D).','error'); return; }
+    Re=v.Re; D=v.D; rho=v.rho; mu=v.mu; nu=v.nu;
+    if (Re===null||D===null) { toast('Zadejte Re a průměr (D).','error'); return; }
     const effNu = resolveNu(nu, rho, mu);
-    if (effNu === null) { showToast('Zadejte ν nebo (ρ + μ).','error'); return; }
-    vel = Re * effNu / D;
-    if (nu === null && rho !== null && mu !== null) nu = mu / rho;
-
+    if (effNu===null) { toast('Zadejte ν nebo (ρ + μ).','error'); return; }
+    vel=Re*effNu/D; if (nu===null && rho!==null && mu!==null) nu=mu/rho;
   } else if (currentTarget === 'D') {
-    Re = v.Re; vel = v.v; rho = v.rho; mu = v.mu; nu = v.nu;
-    if (Re === null || vel === null) { showToast('Zadejte Re a rychlost (v).','error'); return; }
+    Re=v.Re; vel=v.v; rho=v.rho; mu=v.mu; nu=v.nu;
+    if (Re===null||vel===null) { toast('Zadejte Re a rychlost (v).','error'); return; }
     const effNu = resolveNu(nu, rho, mu);
-    if (effNu === null) { showToast('Zadejte ν nebo (ρ + μ).','error'); return; }
-    D = Re * effNu / vel;
-    if (nu === null && rho !== null && mu !== null) nu = mu / rho;
-
+    if (effNu===null) { toast('Zadejte ν nebo (ρ + μ).','error'); return; }
+    D=Re*effNu/vel; if (nu===null && rho!==null && mu!==null) nu=mu/rho;
   } else if (currentTarget === 'mu') {
-    Re = v.Re; vel = v.v; D = v.D; rho = v.rho;
-    if ([Re,vel,D,rho].some(x => x === null)) { showToast('Zadejte Re, v, D a ρ.','error'); return; }
-    mu = rho * vel * D / Re;
-    nu = mu / rho;
-
+    Re=v.Re; vel=v.v; D=v.D; rho=v.rho;
+    if ([Re,vel,D,rho].some(x=>x===null)) { toast('Zadejte Re, v, D a ρ.','error'); return; }
+    mu=rho*vel*D/Re; nu=mu/rho;
   } else if (currentTarget === 'nu') {
-    Re = v.Re; vel = v.v; D = v.D;
-    if ([Re,vel,D].some(x => x === null)) { showToast('Zadejte Re, v a D.','error'); return; }
-    nu = vel * D / Re;
-
+    Re=v.Re; vel=v.v; D=v.D;
+    if ([Re,vel,D].some(x=>x===null)) { toast('Zadejte Re, v a D.','error'); return; }
+    nu=vel*D/Re;
   } else if (currentTarget === 'rho') {
-    Re = v.Re; vel = v.v; D = v.D; mu = v.mu;
-    if ([Re,vel,D,mu].some(x => x === null)) { showToast('Zadejte Re, v, D a μ.','error'); return; }
-    rho = Re * mu / (vel * D);
-    nu = mu / rho;
+    Re=v.Re; vel=v.v; D=v.D; mu=v.mu;
+    if ([Re,vel,D,mu].some(x=>x===null)) { toast('Zadejte Re, v, D a μ.','error'); return; }
+    rho=Re*mu/(vel*D); nu=mu/rho;
   }
 
   // Compute display Re
   let dispRe;
-  if (currentTarget === 'Re') {
-    dispRe = Re;
-  } else {
-    // Re was given as input; verify it
-    dispRe = v.Re;
-    // Also recompute for cross-check
-    const effNu2 = nu;
-    if (vel !== null && D !== null && effNu2 !== null) {
-      dispRe = (vel * D) / effNu2;
-    }
+  if (currentTarget === 'Re') { dispRe = Re; }
+  else {
+    dispRe = (vel!==null && D!==null && nu!==null) ? (vel*D)/nu : v.Re;
   }
+  if (!dispRe || !isFinite(dispRe) || dispRe <= 0) { toast('Výpočet selhal – zkontrolujte hodnoty.','error'); return; }
 
-  if (!dispRe || !isFinite(dispRe) || dispRe <= 0) {
-    showToast('Výpočet selhal – zkontrolujte vstupní hodnoty.','error');
-    return;
-  }
-
-  lastResult = { Re: dispRe, v: vel, D, rho, mu, nu, target: currentTarget };
-  const flow = classifyFlow(dispRe);
-
-  displayResult(dispRe, flow, { v: vel, D, rho, mu, nu });
+  const flow = classify(dispRe);
+  displayResult(dispRe, flow, {v:vel, D, rho, mu, nu});
   showFriction(dispRe);
-  saveToHistory(dispRe, vel, D, nu, flow.type);
+  saveHistory(dispRe, vel, D, nu, flow.type);
   saveLastValues();
 
-  if (window.innerWidth < 900) {
-    document.getElementById('resultCard').scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }
+  if (window.innerWidth < 900)
+    document.getElementById('rcard').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
-// ================================================================
-// FLOW CLASSIFICATION
-// ================================================================
-function classifyFlow(Re) {
-  if (Re < 2300) return { type:'laminar',      label:'Laminární proudění',          desc:'Kapalina proudí v klidných vrstvách. Plně predikovatelné.', icon:'🟢', cls:'laminar' };
-  if (Re <= 4000) return { type:'transitional', label:'Přechodová oblast (nestabilní)', desc:'Osciluje mezi laminárním a turbulentním prouděním.',         icon:'🟡', cls:'transitional' };
-  return              { type:'turbulent',     label:'Turbulentní proudění',         desc:'Chaotické, vírivé proudění. Vyšší třecí ztráty, lepší míchání.', icon:'🔴', cls:'turbulent' };
+function classify(Re) {
+  if (Re < 2300) return {type:'laminar',     label:'Laminární proudění',           desc:'Kapalina proudí v klidných vrstvách. Plně predikovatelné.', icon:'🟢', cls:'laminar'};
+  if (Re <=4000) return {type:'transitional', label:'Přechodová oblast (nestabilní)', desc:'Osciluje mezi laminárním a turbulentním prouděním.', icon:'🟡', cls:'transitional'};
+  return              {type:'turbulent',    label:'Turbulentní proudění',           desc:'Chaotické, vírivé proudění. Vyšší třecí ztráty, lepší míchání.', icon:'🔴', cls:'turbulent'};
 }
 
 // ================================================================
 // DISPLAY RESULT
 // ================================================================
 function displayResult(Re, flow, params) {
-  document.getElementById('resultPlaceholder').style.display = 'none';
-
-  const rc = document.getElementById('resultCard');
+  document.getElementById('rplaceholder').style.display = 'none';
+  const rc = document.getElementById('rcard');
   rc.style.display = 'block';
-  rc.className = 'result-card ' + flow.cls;
-  document.getElementById('resultIcon').textContent = flow.icon;
-  document.getElementById('resultType').textContent = flow.label;
-  document.getElementById('resultDesc').textContent  = flow.desc;
+  rc.className = 'rcard ' + flow.cls;
+  document.getElementById('ricon').textContent  = flow.icon;
+  document.getElementById('rtype').textContent  = flow.label;
+  document.getElementById('rdesc').textContent  = flow.desc;
 
-  // Primary value
   if (currentTarget === 'Re') {
-    document.getElementById('resultRe').textContent = 'Re = ' + fmtRe(Re);
-    document.getElementById('resultRe').style.fontSize = '';
+    document.getElementById('rre').textContent = 'Re = ' + fmtRe(Re);
+    document.getElementById('rre').style.fontSize = '';
   } else {
-    const lines = {
-      v:   `v = ${fmtSI(params.v)} m/s`,
-      D:   `D = ${fmtSI(params.D)} m`,
-      mu:  `μ = ${fmtSI(params.mu)} Pa·s`,
-      nu:  `ν = ${fmtSI(params.nu)} m²/s`,
-      rho: `ρ = ${params.rho.toFixed(3)} kg/m³`
-    };
-    document.getElementById('resultRe').textContent = lines[currentTarget];
-    document.getElementById('resultRe').style.fontSize = '1.75rem';
-    document.getElementById('resultDesc').textContent += `  (Re = ${fmtRe(Re)})`;
+    const labels = {v:`v = ${fmtSI(params.v)} m/s`, D:`D = ${fmtSI(params.D)} m`,
+      mu:`μ = ${fmtSI(params.mu)} Pa·s`, nu:`ν = ${fmtSI(params.nu)} m²/s`,
+      rho:`ρ = ${params.rho?.toFixed(3)} kg/m³`};
+    document.getElementById('rre').textContent = labels[currentTarget] || '';
+    document.getElementById('rre').style.fontSize = '1.75rem';
+    document.getElementById('rdesc').textContent += `  (Re = ${fmtRe(Re)})`;
   }
-
-  // Animate
   requestAnimationFrame(() => rc.classList.add('show'));
 
-  // Viz
-  const vc = document.getElementById('vizContainer');
-  vc.style.display = 'block';
+  document.getElementById('vizCtn').style.display = 'block';
   updateViz(Re, flow.type);
-
-  // Params
-  const ar = document.getElementById('additionalResults');
-  ar.style.display = 'block';
-  buildParamsDisplay(params);
+  document.getElementById('addResults').style.display = 'block';
+  buildParams(params);
 }
 
-function buildParamsDisplay(p) {
+function buildParams(p) {
   const rows = [
     ['Rychlost (v)',        p.v   !== null ? fmtSI(p.v)   + ' m/s'  : null],
     ['Průměr (D)',          p.D   !== null ? fmtSI(p.D)   + ' m'    : null],
-    ['Hustota (ρ)',         p.rho !== null ? p.rho.toFixed(3) + ' kg/m³' : null],
-    ['Dyn. viskozita (μ)',  p.mu  !== null ? fmtSI(p.mu)  + ' Pa·s' : null],
-    ['Kin. viskozita (ν)',  p.nu  !== null ? fmtSI(p.nu)  + ' m²/s' : null],
-  ].filter(r => r[1] !== null);
-
-  document.getElementById('paramsDisplay').innerHTML = rows.map(([k,v]) =>
-    `<div class="params-row"><span class="params-label">${k}</span><span class="params-value">${v}</span></div>`
-  ).join('');
+    ['Hustota (ρ)',         p.rho !== null ? p.rho.toFixed(3)+' kg/m³' : null],
+    ['Dyn. viskozita (μ)', p.mu  !== null ? fmtSI(p.mu)  + ' Pa·s' : null],
+    ['Kin. viskozita (ν)', p.nu  !== null ? fmtSI(p.nu)  + ' m²/s' : null],
+  ].filter(r=>r[1]!==null);
+  document.getElementById('paramsDisplay').innerHTML =
+    rows.map(([k,v])=>`<div class="prow"><span class="pk">${k}</span><span class="pv">${v}</span></div>`).join('');
 }
 
 // ================================================================
 // VISUALIZATION
 // ================================================================
 function updateViz(Re, type) {
-  // Logarithmic scale: 10^0 to 10^8
-  const pct = Math.max(1, Math.min(99, (Math.log10(Re) / 8) * 100));
-  const m = document.getElementById('scaleMarker');
-  m.style.left = pct + '%';
-  m.setAttribute('data-value', 'Re=' + fmtRe(Re));
-
+  const pct = Math.max(1, Math.min(99, (Math.log10(Re)/8)*100));
+  const m = document.getElementById('smark');
+  m.style.left = pct+'%'; m.setAttribute('data-value','Re='+fmtRe(Re));
   drawStreamlines(type);
 }
 
 function drawStreamlines(type) {
-  const W = 400, H = 72, N = 7;
-  let html = '';
-
-  // Walls
-  html += `<line x1="0" y1="3" x2="${W}" y2="3" stroke="var(--text)" stroke-width="3" opacity="0.35"/>`;
-  html += `<line x1="0" y1="${H-3}" x2="${W}" y2="${H-3}" stroke="var(--text)" stroke-width="3" opacity="0.35"/>`;
-
-  for (let i = 0; i < N; i++) {
-    const yBase = ((H - 12) / (N + 1)) * (i + 1) + 6;
-
-    if (type === 'laminar') {
-      html += `<line x1="0" y1="${yBase}" x2="${W}" y2="${yBase}" stroke="#10b981" stroke-width="1.8" opacity="0.85"/>`;
-      for (let x = 60; x < W; x += 90) {
-        html += `<polygon points="${x},${yBase} ${x-10},${yBase-4.5} ${x-10},${yBase+4.5}" fill="#10b981" opacity="0.85"/>`;
-      }
-    } else if (type === 'transitional') {
-      const amp = 3 + (i % 3) * 1.5;
-      let d = `M0,${yBase}`;
-      for (let x = 0; x <= W; x += 15) {
-        d += ` L${x},${yBase + amp * Math.sin((x + i * 45) * 0.04)}`;
-      }
-      html += `<path d="${d}" stroke="#f59e0b" stroke-width="1.6" fill="none" opacity="0.85"/>`;
+  const W=400, H=72, N=7; let html='';
+  html+=`<line x1="0" y1="3" x2="${W}" y2="3" stroke="var(--text)" stroke-width="3" opacity=".35"/>`;
+  html+=`<line x1="0" y1="${H-3}" x2="${W}" y2="${H-3}" stroke="var(--text)" stroke-width="3" opacity=".35"/>`;
+  for (let i=0; i<N; i++) {
+    const yB = ((H-12)/(N+1))*(i+1)+6;
+    if (type==='laminar') {
+      html+=`<line x1="0" y1="${yB}" x2="${W}" y2="${yB}" stroke="#10b981" stroke-width="1.8" opacity=".85"/>`;
+      for (let x=60; x<W; x+=90)
+        html+=`<polygon points="${x},${yB} ${x-10},${yB-4.5} ${x-10},${yB+4.5}" fill="#10b981" opacity=".85"/>`;
+    } else if (type==='transitional') {
+      const amp=3+(i%3)*1.5; let d=`M0,${yB}`;
+      for (let x=0; x<=W; x+=15) d+=` L${x},${yB+amp*Math.sin((x+i*45)*.04)}`;
+      html+=`<path d="${d}" stroke="#f59e0b" stroke-width="1.6" fill="none" opacity=".85"/>`;
     } else {
-      // Seeded pseudo-random for deterministic output
-      let d = `M0,${yBase}`; let y = yBase;
-      const seed = i * 137.5;
-      for (let x = 0; x <= W; x += 6) {
-        const r = Math.sin(x * 0.31 + seed) * 0.5 + Math.sin(x * 0.87 + seed * 1.3) * 0.5;
-        const dy = r * 7 * (i % 2 === 0 ? 1 : -1);
-        y = Math.max(8, Math.min(H - 8, y + dy * 0.28));
-        d += ` L${x},${y}`;
+      let d=`M0,${yB}`, y=yB; const seed=i*137.5;
+      for (let x=0; x<=W; x+=6) {
+        const r=Math.sin(x*.31+seed)*.5+Math.sin(x*.87+seed*1.3)*.5;
+        y=Math.max(8,Math.min(H-8,y+r*7*(i%2===0?1:-1)*.28));
+        d+=` L${x},${y}`;
       }
-      html += `<path d="${d}" stroke="#ef4444" stroke-width="1.4" fill="none" opacity="0.75"/>`;
+      html+=`<path d="${d}" stroke="#ef4444" stroke-width="1.4" fill="none" opacity=".75"/>`;
     }
   }
-
-  document.getElementById('streamlinesSvg').innerHTML = html;
+  document.getElementById('slSvg').innerHTML = html;
 }
 
 // ================================================================
@@ -1019,274 +876,424 @@ function drawStreamlines(type) {
 // ================================================================
 function showFriction(Re) {
   let f, formula, note;
-  if (Re < 2300) {
-    f = 64 / Re;
-    formula = 'f = 64 / Re  (Hagen-Poiseuille)';
-    note = 'Platí přesně pro laminární proudění.';
-  } else if (Re <= 4000) {
-    f = null;
-    formula = 'Přechodová oblast — nelze přesně určit';
-    note = 'Nestabilní oblast, empirické korelace nespolehlivé.';
-  } else if (Re < 1e5) {
-    f = 0.316 * Math.pow(Re, -0.25);
-    formula = 'f = 0,316 × Re⁻⁰·²⁵  (Blasius)';
-    note = 'Hladké potrubí, Re < 10⁵';
-  } else {
-    f = 0.184 * Math.pow(Re, -0.20);
-    formula = 'f = 0,184 × Re⁻⁰·²  (Blasius – upravený)';
-    note = 'Hladké potrubí, Re 10⁵ – 10⁶';
-  }
-
-  document.getElementById('frictionCard').style.display = 'block';
-  document.getElementById('frictionContent').innerHTML = `
-    <div class="friction-box">
-      <div class="friction-formula">${formula}</div>
-      ${f !== null
-        ? `<div class="friction-value">f = ${f.toExponential(4)}</div>`
-        : `<div style="font-size:1rem;font-weight:700;color:var(--warning)">—</div>`}
-      <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.375rem">${note}</div>
-    </div>
-    ${f !== null ? `<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.75rem">Tlaková ztráta: <span style="font-family:monospace;font-weight:600">ΔP = f × (L/D) × (ρ×v²/2)</span></div>` : ''}
-  `;
-}
-
-// ================================================================
-// HISTORY
-// ================================================================
-function saveToHistory(Re, vel, D, nu, type) {
-  const fluidEl = document.getElementById('selectedFluidName');
-  const fluid = fluidEl ? fluidEl.value : '—';
-  calcHistory.unshift({
-    Re: Math.round(Re),
-    v: vel ? fmtSI(vel) : '?',
-    D: D ? fmtSI(D) : '?',
-    fluid,
-    type,
-    time: new Date().toLocaleTimeString('cs-CZ', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
-  });
-  if (calcHistory.length > 10) calcHistory.pop();
-  localStorage.setItem('reHistory', JSON.stringify(calcHistory));
-  renderHistory();
-}
-
-function renderHistory() {
-  const c = document.getElementById('historyContent');
-  if (!calcHistory.length) {
-    c.innerHTML = '<div class="empty-state">📋 Zatím žádné výpočty</div>';
-    return;
-  }
-  const typeLabel = { laminar:'Laminární', transitional:'Přechodová', turbulent:'Turbulentní' };
-  c.innerHTML = `
-    <div class="history-scroll">
-      <table>
-        <thead><tr><th>Re</th><th>v</th><th>D</th><th>Typ proudění</th><th>Čas</th></tr></thead>
-        <tbody>${calcHistory.map(h => `
-          <tr>
-            <td><strong>${h.Re.toLocaleString('cs-CZ')}</strong></td>
-            <td style="font-family:monospace">${h.v}</td>
-            <td style="font-family:monospace">${h.D}</td>
-            <td><span class="badge badge-${h.type}">${typeLabel[h.type]||h.type}</span></td>
-            <td style="color:var(--text-secondary)">${h.time}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`;
-}
-
-function clearHistory() {
-  calcHistory = [];
-  localStorage.removeItem('reHistory');
-  renderHistory();
+  if (Re < 2300)       { f=64/Re;                        formula='f = 64 / Re (Hagen-Poiseuille)';      note='Přesné analytické řešení pro laminární proudění.'; }
+  else if (Re <= 4000) { f=null;                          formula='Přechodová oblast — nelze určit';      note='Nestabilní oblast, korelace nespolehlivé.'; }
+  else if (Re < 1e5)   { f=0.316*Math.pow(Re,-0.25);     formula='f = 0,316 × Re⁻⁰·²⁵ (Blasius)';      note='Hladké potrubí, Re < 10⁵'; }
+  else                  { f=0.184*Math.pow(Re,-0.20);     formula='f = 0,184 × Re⁻⁰·² (Blasius – rozš.)';note='Hladké potrubí, Re 10⁵–10⁶'; }
+  document.getElementById('frictionCard').style.display='block';
+  document.getElementById('frictionContent').innerHTML=`
+    <div class="fbox"><div class="fform">${formula}</div>
+    ${f!==null?`<div class="fval">f = ${f.toExponential(4)}</div>`:'<div style="font-size:1rem;font-weight:700;color:var(--warning)">—</div>'}
+    <div style="font-size:.75rem;color:var(--text2);margin-top:.375rem">${note}</div></div>
+    ${f!==null?`<div style="font-size:.75rem;color:var(--text2);margin-top:.75rem">Tlaková ztráta: <span style="font-family:monospace;font-weight:600">ΔP = f × (L/D) × (ρ×v²/2)</span></div>`:''}`;
 }
 
 // ================================================================
 // FLUID MODAL
 // ================================================================
+const CATEGORIES = ['Vše','Kapaliny','Oleje','Plyny','Vlastní'];
+let activeCategory = 'Vše';
+
 function renderFluidGrid() {
-  document.getElementById('fluidGrid').innerHTML = FLUIDS.map((f, i) => `
-    <div class="fluid-card" onclick="loadFluid(${i})">
-      <div class="fluid-name">${f.icon} ${f.name} (${f.temp})</div>
-      <div class="fluid-props">
-        ρ = ${f.rho} kg/m³<br>
-        ${f.mu !== null ? `μ = ${(f.mu*1000).toPrecision(4)} cP<br>` : ''}
-        ${f.nu !== null ? `ν = ${f.nu.toExponential(3)} m²/s` : ''}
-      </div>
-    </div>`).join('');
+  // Category filter
+  document.getElementById('categoryFilter').innerHTML = CATEGORIES.map(c =>
+    `<button onclick="filterCat('${c}')" id="cat-${c}" class="tbtn${c===activeCategory?' active':''}" style="padding:.35rem .75rem;font-size:.75rem">${c}</button>`
+  ).join('');
+
+  // Build list
+  const all = getAllFluids();
+  const filtered = activeCategory==='Vše' ? all : all.filter(f => f.cat===activeCategory);
+
+  let html = filtered.map((f,i) => {
+    const realIdx = all.indexOf(f);
+    return `<div class="fcard" onclick="showFluidDetail(${realIdx})">
+      <div class="fname">${f.icon} ${f.name}${f.isCustom?` <span style="font-size:.65rem;color:#8b5cf6">vlastní</span>`:''}</div>
+      <div class="fprops">${f.formula !== '—' ? f.formula+'<br>':''}<span class="ftag">${f.cat}</span><br>${f.tempMin}–${f.tempMax} °C</div>
+    </div>`;
+  }).join('');
+
+  html += `<div class="fcard custom-btn" onclick="showCustomForm()">
+    <span style="font-size:1.5rem">➕</span>
+    <span style="font-size:.875rem;font-weight:700">Vlastní kapalina</span>
+    <span style="font-size:.75rem">Zadat vlastní vlastnosti</span>
+  </div>`;
+
+  document.getElementById('fluidGrid').innerHTML = html;
+
+  // Saved custom fluids section
+  const custom = getCustomFluids();
+  const savedSection = document.getElementById('mSavedCustom');
+  if (custom.length > 0) {
+    savedSection.style.display = 'block';
+    document.getElementById('savedCustomGrid').innerHTML = custom.map((f,i) =>
+      `<div style="display:flex;gap:.5rem;align-items:center;padding:.5rem .75rem;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.8125rem">
+        <span>${f.icon} ${f.name}</span>
+        <button onclick="deleteCustomFluid(${i})" class="btn btn-danger" style="padding:.15rem .5rem;font-size:.7rem;flex-shrink:0;margin-left:auto">🗑</button>
+      </div>`).join('');
+  } else {
+    savedSection.style.display = 'none';
+  }
 }
 
-function loadFluid(idx) {
-  const f = FLUIDS[idx];
+function filterCat(cat) {
+  activeCategory = cat;
+  renderFluidGrid();
+}
+
+function openFluidModal() {
+  goStep1();
+  document.getElementById('fluidModal').classList.add('open');
+}
+
+function goStep1() {
+  document.getElementById('mStep1').style.display = 'block';
+  document.getElementById('mStep2').style.display = 'none';
+  document.getElementById('mCustom').style.display = 'none';
+  document.getElementById('mTitle').textContent = '💧 Vyberte kapalinu';
+  renderFluidGrid();
+}
+
+function showFluidDetail(idx) {
+  const all = getAllFluids();
+  const fluid = all[idx];
+  selectedFluidIdx = idx;
+
+  const clampedTemp = Math.min(Math.max(20, fluid.tempMin), fluid.tempMax);
+  selectedTemp = clampedTemp;
+
+  document.getElementById('mStep1').style.display = 'none';
+  document.getElementById('mStep2').style.display = 'block';
+  document.getElementById('mTitle').textContent = `${fluid.icon} ${fluid.name}`;
+
+  document.getElementById('detailIcon').textContent    = fluid.icon;
+  document.getElementById('detailName').textContent    = fluid.name;
+  document.getElementById('detailFormula').textContent = fluid.formula !== '—' ? fluid.formula : '';
+  document.getElementById('detailCat').textContent     = fluid.cat;
+
+  const slider = document.getElementById('tempSlider');
+  slider.min   = fluid.tempMin;
+  slider.max   = fluid.tempMax;
+  slider.value = selectedTemp;
+
+  document.getElementById('tRangeMin').textContent = fluid.tempMin + ' °C';
+  document.getElementById('tRangeMax').textContent = fluid.tempMax + ' °C';
+
+  updateSliderStyle();
+  updatePropsDisplay();
+}
+
+function onTempChange() {
+  selectedTemp = parseFloat(document.getElementById('tempSlider').value);
+  updateSliderStyle();
+  updatePropsDisplay();
+}
+
+function updateSliderStyle() {
+  const slider = document.getElementById('tempSlider');
+  const min = parseFloat(slider.min), max = parseFloat(slider.max), val = parseFloat(slider.value);
+  const pct = ((val-min)/(max-min)*100).toFixed(1)+'%';
+  slider.style.setProperty('--sldr-pct', pct);
+}
+
+function updatePropsDisplay() {
+  const fluid = getAllFluids()[selectedFluidIdx];
+  if (!fluid) return;
+  const p = interpolate(fluid, selectedTemp);
+  document.getElementById('tempDisplay').textContent = selectedTemp.toFixed(1) + ' °C';
+  document.getElementById('pRho').textContent = p.rho.toFixed(2);
+  document.getElementById('pMu').textContent  = (p.mu*1e3).toPrecision(4);
+  document.getElementById('pNu').textContent  = (p.nu*1e6).toPrecision(4);
+  // Warn if temp was clamped
+  const warn = document.getElementById('tempWarn');
+  if (selectedTemp < fluid.tempMin || selectedTemp > fluid.tempMax) {
+    warn.style.display='block';
+    warn.textContent=`⚠️ Data dostupná pouze pro ${fluid.tempMin}–${fluid.tempMax} °C. Zobrazeny hraniční hodnoty.`;
+  } else { warn.style.display='none'; }
+}
+
+function applyFluid() {
+  const fluid = getAllFluids()[selectedFluidIdx];
+  if (!fluid) return;
+  const p = interpolate(fluid, selectedTemp);
   const req = REQ[currentTarget];
 
-  function setVal(field, rawVal, unit) {
-    const inp = document.getElementById('input-' + field);
-    const sel = document.getElementById('unit-' + field);
-    if (!inp || rawVal === null) return;
-    // Convert from SI to selected unit
-    const key = FIELDS[field].key;
-    const factor = CONV[key][unit];
-    inp.value = (rawVal / factor).toPrecision(5);
-    if (sel) sel.value = unit;
-  }
+  if (req.includes('rho')) setFieldFromSI('rho', p.rho);
+  if (req.includes('mu'))  setSciFromSI('mu', p.mu);
+  if (req.includes('nu'))  setSciFromSI('nu', p.nu);
+  // Show sci previews
+  if (req.includes('mu')) updateSciPreview('mu');
+  if (req.includes('nu')) updateSciPreview('nu');
 
-  if (req.includes('rho'))  setVal('rho', f.rho, 'kg/m³');
-  if (req.includes('mu') && f.mu !== null)  setVal('mu', f.mu, 'cP');
-  if (req.includes('nu') && f.nu !== null)  setVal('nu', f.nu, 'm²/s');
-
-  document.getElementById('selectedFluidName').value = `${f.name} (${f.temp})`;
+  const fluidNameEl = document.getElementById('selectedFluidName');
+  if (fluidNameEl) fluidNameEl.value = `${fluid.name} (${selectedTemp.toFixed(1)}°C)`;
   closeModal('fluidModal');
 }
 
-function openFluidModal() { document.getElementById('fluidModal').classList.add('open'); }
-function closeModal(id)   { document.getElementById(id).classList.remove('open'); }
-function closeModalOnOverlay(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+// ================================================================
+// CUSTOM FLUID
+// ================================================================
+function showCustomForm() {
+  document.getElementById('mStep1').style.display = 'none';
+  document.getElementById('mCustom').style.display = 'block';
+  document.getElementById('mTitle').textContent = '➕ Vlastní kapalina';
+  document.getElementById('customSaved').innerHTML = '';
+}
+
+function getCustomFluids() {
+  try { return JSON.parse(localStorage.getItem('customFluids') || '[]'); } catch(e) { return []; }
+}
+
+function resolveCustomProps() {
+  const name   = document.getElementById('cf-name').value.trim() || 'Vlastní kapalina';
+  const temp   = parseFloat(document.getElementById('cf-temp').value) || 20;
+  const rho    = parseFloat(document.getElementById('cf-rho').value);
+  const muCp   = parseFloat(document.getElementById('cf-mu-cp').value);
+  const nuCst  = parseFloat(document.getElementById('cf-nu-cst').value);
+
+  if (isNaN(rho) || rho <= 0) { toast('Zadejte hustotu ρ.','error'); return null; }
+
+  let mu_si, nu_si;
+  if (!isNaN(muCp) && muCp > 0) {
+    mu_si = muCp * 1e-3;
+    nu_si = mu_si / rho;
+  } else if (!isNaN(nuCst) && nuCst > 0) {
+    nu_si = nuCst * 1e-6;
+    mu_si = nu_si * rho;
+  } else { toast('Zadejte μ (cP) nebo ν (cSt).','error'); return null; }
+
+  const mu_mPas = mu_si * 1e3;
+  return { name, temp, rho, mu_si, nu_si, mu_mPas };
+}
+
+function previewCustomFluid() {
+  const r = resolveCustomProps(); if (!r) return;
+  applyCustomProps(r.rho, r.mu_si, r.nu_si, r.name, r.temp);
+  closeModal('fluidModal');
+}
+
+function saveCustomFluid() {
+  const r = resolveCustomProps(); if (!r) return;
+  const custom = getCustomFluids();
+  custom.push({
+    id:'custom_'+Date.now(), name:r.name, formula:'—', icon:'🔬',
+    cat:'Vlastní', isCustom:true, tempMin:r.temp, tempMax:r.temp,
+    data:[[r.temp, r.rho, r.mu_mPas]]
+  });
+  localStorage.setItem('customFluids', JSON.stringify(custom));
+  applyCustomProps(r.rho, r.mu_si, r.nu_si, r.name, r.temp);
+  toast(`"${r.name}" uložena!`,'success');
+  closeModal('fluidModal');
+}
+
+function deleteCustomFluid(localIdx) {
+  const custom = getCustomFluids();
+  custom.splice(localIdx, 1);
+  localStorage.setItem('customFluids', JSON.stringify(custom));
+  renderFluidGrid();
+  toast('Kapalina smazána.','info');
+}
+
+function applyCustomProps(rho, mu_si, nu_si, name, temp) {
+  const req = REQ[currentTarget];
+  if (req.includes('rho')) setFieldFromSI('rho', rho);
+  if (req.includes('mu'))  { setSciFromSI('mu', mu_si); updateSciPreview('mu'); }
+  if (req.includes('nu'))  { setSciFromSI('nu', nu_si); updateSciPreview('nu'); }
+  document.getElementById('selectedFluidName').value = `${name} (${temp}°C)`;
+}
 
 // ================================================================
-// THEORY COLLAPSIBLE
+// MODAL HELPERS
 // ================================================================
-function toggleCollapsible(id) {
-  const body  = document.getElementById('body-' + id);
-  const arrow = document.getElementById('arrow-' + id);
-  const open  = body.classList.toggle('open');
-  arrow.textContent = open ? '▲' : '▼';
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOverlay(e, id) { if (e.target===document.getElementById(id)) closeModal(id); }
+
+// ================================================================
+// HISTORY
+// ================================================================
+function saveHistory(Re, vel, D, nu, type) {
+  const fluidName = document.getElementById('selectedFluidName').value;
+  calcHistory.unshift({
+    Re: Math.round(Re),
+    v:  vel ? fmtSI(vel) : '?',
+    D:  D   ? fmtSI(D)  : '?',
+    fluid: fluidName,
+    type, time: new Date().toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+  });
+  if (calcHistory.length>10) calcHistory.pop();
+  localStorage.setItem('reHistory', JSON.stringify(calcHistory));
+  renderHistory();
+}
+
+function renderHistory() {
+  const c = document.getElementById('histContent');
+  if (!calcHistory.length) { c.innerHTML='<div class="empty-state">📋 Zatím žádné výpočty</div>'; return; }
+  const tl = {laminar:'Laminární',transitional:'Přechodová',turbulent:'Turbulentní'};
+  const bc = {laminar:'bl',transitional:'bt',turbulent:'br'};
+  c.innerHTML=`<div class="hscroll"><table><thead><tr><th>Re</th><th>v</th><th>D</th><th>Kapalina</th><th>Typ</th><th>Čas</th></tr></thead><tbody>
+    ${calcHistory.map(h=>`<tr>
+      <td><strong>${h.Re.toLocaleString('cs-CZ')}</strong></td>
+      <td style="font-family:monospace">${h.v}</td>
+      <td style="font-family:monospace">${h.D}</td>
+      <td style="font-size:.75rem">${h.fluid||'—'}</td>
+      <td><span class="badge ${bc[h.type]||''}">${tl[h.type]||h.type}</span></td>
+      <td style="color:var(--text2)">${h.time}</td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function clearHistory() {
+  calcHistory=[]; localStorage.removeItem('reHistory'); renderHistory();
 }
 
 // ================================================================
 // CLEAR FORM
 // ================================================================
 function clearForm() {
-  document.querySelectorAll('#inputFields input[type="number"]').forEach(inp => {
-    inp.value = '';
-    inp.classList.remove('error');
-  });
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('resultCard').classList.remove('show');
-  document.getElementById('resultPlaceholder').style.display = 'block';
-  document.getElementById('vizContainer').style.display = 'none';
-  document.getElementById('additionalResults').style.display = 'none';
-  document.getElementById('frictionCard').style.display = 'none';
-  document.getElementById('selectedFluidName').value = '—';
-  lastResult = null;
+  document.querySelectorAll('#inputFields input[type=number]').forEach(i=>{ i.value=''; i.classList.remove('err'); });
+  document.querySelectorAll('#inputFields .sci-preview').forEach(p=>p.textContent='');
+  fieldSIValues = {};
+  document.getElementById('rcard').style.display='none';
+  document.getElementById('rcard').classList.remove('show');
+  document.getElementById('rplaceholder').style.display='block';
+  document.getElementById('vizCtn').style.display='none';
+  document.getElementById('addResults').style.display='none';
+  document.getElementById('frictionCard').style.display='none';
+  document.getElementById('selectedFluidName').value='—';
   localStorage.removeItem('lastValues');
 }
 
 // ================================================================
-// EXPORT CSV
+// THEORY COLLAPSIBLE
+// ================================================================
+function toggleColl(id) {
+  const b=document.getElementById('body-'+id), a=document.getElementById('arr-'+id);
+  const o=b.classList.toggle('open'); a.textContent=o?'▲':'▼';
+}
+
+// ================================================================
+// EXPORT / SHARE
 // ================================================================
 function exportCSV() {
-  if (!calcHistory.length) { showToast('Žádná data k exportu.','error'); return; }
-  const typeLabel = { laminar:'Laminární', transitional:'Přechodová oblast', turbulent:'Turbulentní' };
-  const hdr = ['Re','Rychlost (m/s)','Průměr (m)','Kapalina','Typ proudění','Čas'];
-  const rows = calcHistory.map(h => [h.Re, h.v, h.D, h.fluid, typeLabel[h.type]||h.type, h.time]);
-  const csv = [hdr, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\r\n');
-  const blob = new Blob(['\ufeff'+csv], { type:'text/csv;charset=utf-8;' });
-  const a = Object.assign(document.createElement('a'), { href:URL.createObjectURL(blob), download:'reynolds_history.csv' });
-  a.click(); URL.revokeObjectURL(a.href);
-  showToast('CSV staženo!','success');
+  if (!calcHistory.length) { toast('Žádná data k exportu.','error'); return; }
+  const tl={laminar:'Laminární',transitional:'Přechodová oblast',turbulent:'Turbulentní'};
+  const hdr=['Re','Rychlost','Průměr','Kapalina','Typ','Čas'];
+  const rows=calcHistory.map(h=>[h.Re,h.v,h.D,h.fluid,tl[h.type]||h.type,h.time]);
+  const csv=[hdr,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\r\n');
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'})),download:'reynolds_history.csv'});
+  a.click(); URL.revokeObjectURL(a.href); toast('CSV staženo!','success');
 }
 
-// ================================================================
-// URL SHARING
-// ================================================================
 function shareUrl() {
-  const p = new URLSearchParams({ target: currentTarget });
-  REQ[currentTarget].forEach(f => {
-    const inp = document.getElementById('input-' + f);
-    const sel = document.getElementById('unit-' + f);
-    if (inp && inp.value.trim()) {
-      p.set('v_'+f, inp.value.trim());
-      if (sel) p.set('u_'+f, sel.value);
+  const p=new URLSearchParams({target:currentTarget});
+  REQ[currentTarget].forEach(f=>{
+    if (FIELDS[f].sci) {
+      const c=document.getElementById('sci-c-'+f)?.value;
+      const e=document.getElementById('sci-e-'+f)?.value;
+      const u=document.getElementById('unit-'+f)?.value;
+      if (c) { p.set('sc_'+f,c); p.set('se_'+f,e||'0'); p.set('su_'+f,u||DEF_UNIT[FIELDS[f].key]); }
+    } else {
+      const inp=document.getElementById('input-'+f);
+      const sel=document.getElementById('unit-'+f);
+      if (inp?.value) { p.set('v_'+f,inp.value); if (sel) p.set('u_'+f,sel.value); }
     }
   });
-  const url = location.href.split('?')[0] + '?' + p.toString();
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => showToast('Link zkopírován!','success'));
-  } else {
-    prompt('Zkopírujte link:', url);
-  }
+  const url=location.href.split('?')[0]+'?'+p.toString();
+  if (navigator.clipboard) { navigator.clipboard.writeText(url).then(()=>toast('Link zkopírován!','success')); }
+  else prompt('Zkopírujte link:',url);
 }
 
-let urlLoaded = false;
+let urlLoaded=false;
 function loadFromUrl() {
-  const p = new URLSearchParams(location.search);
+  const p=new URLSearchParams(location.search);
   if (!p.has('target')) return;
-  const t = p.get('target');
+  const t=p.get('target');
   if (['Re','v','D','mu','nu','rho'].includes(t)) setTarget(t);
-  setTimeout(() => {
-    p.forEach((val, key) => {
-      if (key.startsWith('v_')) {
-        const el = document.getElementById('input-' + key.slice(2));
-        if (el) el.value = val;
+  setTimeout(()=>{
+    p.forEach((val,key)=>{
+      if (key.startsWith('sc_')) {
+        const f=key.slice(3);
+        const el=document.getElementById('sci-c-'+f); if (el) el.value=val;
+      } else if (key.startsWith('se_')) {
+        const f=key.slice(3);
+        const el=document.getElementById('sci-e-'+f); if (el) el.value=val;
+      } else if (key.startsWith('su_')) {
+        const f=key.slice(3);
+        const el=document.getElementById('unit-'+f); if (el) el.value=val;
+      } else if (key.startsWith('v_')) {
+        const f=key.slice(2);
+        const el=document.getElementById('input-'+f); if (el) el.value=val;
       } else if (key.startsWith('u_')) {
-        const el = document.getElementById('unit-' + key.slice(2));
-        if (el) el.value = val;
+        const f=key.slice(2);
+        const el=document.getElementById('unit-'+f); if (el) el.value=val;
       }
     });
-    if ([...p.keys()].filter(k => k.startsWith('v_')).length >= 2) calculate();
-    urlLoaded = true;
-  }, 80);
+    // update sci previews
+    ['mu','nu'].forEach(f=>{ if (document.getElementById('sci-c-'+f)) onSciInput(f); });
+    const count=[...p.keys()].filter(k=>k.startsWith('v_')||k.startsWith('sc_')).length;
+    if (count>=2) calculate();
+    urlLoaded=true;
+  },80);
 }
 
 function saveLastValues() {
-  const data = { target: currentTarget };
-  REQ[currentTarget].forEach(f => {
-    const inp = document.getElementById('input-' + f);
-    const sel = document.getElementById('unit-' + f);
-    if (inp) data['v_'+f] = inp.value;
-    if (sel) data['u_'+f] = sel.value;
+  const data={target:currentTarget};
+  REQ[currentTarget].forEach(f=>{
+    if (FIELDS[f].sci) {
+      data['sc_'+f]=document.getElementById('sci-c-'+f)?.value||'';
+      data['se_'+f]=document.getElementById('sci-e-'+f)?.value||'0';
+      data['su_'+f]=document.getElementById('unit-'+f)?.value||DEF_UNIT[FIELDS[f].key];
+    } else {
+      data['v_'+f]=document.getElementById('input-'+f)?.value||'';
+      data['u_'+f]=document.getElementById('unit-'+f)?.value||'';
+    }
   });
-  localStorage.setItem('lastValues', JSON.stringify(data));
+  localStorage.setItem('lastValues',JSON.stringify(data));
 }
 
 function loadLastValues() {
   if (urlLoaded) return;
-  setTimeout(() => {
+  setTimeout(()=>{
     if (urlLoaded) return;
     try {
-      const data = JSON.parse(localStorage.getItem('lastValues') || 'null');
+      const data=JSON.parse(localStorage.getItem('lastValues')||'null');
       if (!data) return;
       if (data.target && ['Re','v','D','mu','nu','rho'].includes(data.target)) setTarget(data.target);
-      setTimeout(() => {
-        Object.entries(data).forEach(([key, val]) => {
-          if (key.startsWith('v_')) {
-            const el = document.getElementById('input-' + key.slice(2));
-            if (el) el.value = val;
-          } else if (key.startsWith('u_')) {
-            const el = document.getElementById('unit-' + key.slice(2));
-            if (el) el.value = val;
-          }
+      setTimeout(()=>{
+        Object.entries(data).forEach(([key,val])=>{
+          if (!val) return;
+          if (key.startsWith('sc_')) { const e=document.getElementById('sci-c-'+key.slice(3)); if (e) e.value=val; }
+          else if (key.startsWith('se_')) { const e=document.getElementById('sci-e-'+key.slice(3)); if (e) e.value=val; }
+          else if (key.startsWith('su_')) { const e=document.getElementById('unit-'+key.slice(3)); if (e) e.value=val; }
+          else if (key.startsWith('v_')) { const e=document.getElementById('input-'+key.slice(2)); if (e) e.value=val; }
+          else if (key.startsWith('u_')) { const e=document.getElementById('unit-'+key.slice(2)); if (e) e.value=val; }
         });
-      }, 50);
-    } catch(e) {}
-  }, 150);
+        ['mu','nu'].forEach(f=>{ if (document.getElementById('sci-c-'+f)) onSciInput(f); });
+      },50);
+    } catch(e){}
+  },150);
 }
 
 // ================================================================
-// TOAST NOTIFICATIONS
+// TOAST
 // ================================================================
-function showToast(msg, type='error') {
-  const colors = { error:'#ef4444', success:'#10b981', info:'#2563eb' };
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.style.background = colors[type] || colors.info;
-  t.textContent = (type==='error' ? '⚠️ ' : type==='success' ? '✅ ' : 'ℹ️ ') + msg;
+function toast(msg, type='error') {
+  const colors={error:'#ef4444',success:'#10b981',info:'#2563eb'};
+  const t=document.createElement('div'); t.className='toast';
+  t.style.background=colors[type]||colors.info;
+  t.textContent=(type==='error'?'⚠️ ':type==='success'?'✅ ':'ℹ️ ')+msg;
   document.body.appendChild(t);
-  setTimeout(() => { t.style.transition='opacity 0.3s'; t.style.opacity='0'; setTimeout(()=>t.remove(),320); }, 3000);
+  setTimeout(()=>{ t.style.transition='opacity .3s'; t.style.opacity='0'; setTimeout(()=>t.remove(),320); },3000);
 }
 
 // ================================================================
-// FORMATTING HELPERS
+// FORMAT HELPERS
 // ================================================================
-function fmtRe(v) {
-  return Math.round(v).toLocaleString('cs-CZ');
-}
+function fmtRe(v) { return Math.round(v).toLocaleString('cs-CZ'); }
 function fmtSI(v) {
-  if (v === null || v === undefined) return '?';
-  if (Math.abs(v) === 0) return '0';
-  if (Math.abs(v) < 0.001 || Math.abs(v) >= 100000) return v.toExponential(4);
-  // Up to 5 significant figures
-  const sig = parseFloat(v.toPrecision(5));
-  return sig.toString();
+  if (v===null||v===undefined) return '?';
+  if (Math.abs(v)===0) return '0';
+  if (Math.abs(v)<0.001||Math.abs(v)>=100000) return v.toExponential(4);
+  return parseFloat(v.toPrecision(5)).toString();
 }
 </script>
 </body>
